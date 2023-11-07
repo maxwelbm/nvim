@@ -8,6 +8,9 @@ vim.g.maplocalleader = ' '
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+-- [[ setup font ]]
+require("setup_font")
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -189,9 +192,9 @@ vim.o.hlsearch = false
 vim.wo.relativenumber = true
 vim.wo.number = true
 
-local columns = { 80, 120 } -- Coloque os números das colunas limite desejadas aqui
+-- local columns = { 80, 120 } -- Coloque os números das colunas limite desejadas aqui
 -- Define as colunas de limite
-vim.wo.colorcolumn = table.concat(columns, ',')
+-- vim.wo.colorcolumn = table.concat(columns, ',')
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -712,7 +715,7 @@ require("presence").setup({
 require('onedark').setup {
     -- Main options --
     style = 'dark',               -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
-    transparent = true,           -- Show/hide background
+    transparent = false,          -- Show/hide background
     term_colors = true,           -- Change terminal color as per the selected theme style
     ending_tildes = false,        -- Show the end-of-buffer tildes. By default they are hidden
     cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
@@ -830,18 +833,20 @@ local function ins_right(component)
     table.insert(config.sections.lualine_x, component)
 end
 
-ins_left {
-    function()
-        return '▊'
-    end,
-    color = { fg = colors.blue },      -- Sets highlighting of component
-    padding = { left = 0, right = 1 }, -- We don't need space before this
-}
+-- ins_left {
+--     function()
+--         return '▊'
+--     end,
+--     color = { fg = colors.blue },      -- Sets highlighting of component
+--     padding = { left = 0, right = 1 }, -- We don't need space before this
+-- }
 
 ins_left {
     -- mode component
     function()
-        return ''
+        -- return '▊ 󰌌'
+        return ' 󰌌'
+        -- return '▊ '
     end,
     color = function()
         -- auto change color according to neovims mode
@@ -873,30 +878,27 @@ ins_left {
 }
 
 ins_left {
-    -- filesize component
-    'filesize',
-    cond = conditions.buffer_not_empty,
-}
-
-ins_left {
     'filename',
     cond = conditions.buffer_not_empty,
     color = { fg = colors.magenta, gui = 'bold' },
 }
 
-ins_left { 'location' }
-
-ins_left { 'progress', color = { fg = colors.fg, gui = 'bold' } }
+ins_left {
+    'branch',
+    icon = '',
+    color = { fg = colors.violet, gui = 'bold' },
+}
 
 ins_left {
-    'diagnostics',
-    sources = { 'nvim_diagnostic' },
-    symbols = { error = ' ', warn = ' ', info = ' ' },
-    diagnostics_color = {
-        color_error = { fg = colors.red },
-        color_warn = { fg = colors.yellow },
-        color_info = { fg = colors.cyan },
+    'diff',
+    -- Is it me or the symbol for modified us really weird
+    symbols = { added = ' ', modified = '󰝤 ', removed = ' ' },
+    diff_color = {
+        added = { fg = colors.green },
+        modified = { fg = colors.orange },
+        removed = { fg = colors.red },
     },
+    cond = conditions.hide_in_width,
 }
 
 -- Insert mid section. You can make any number of sections in neovim :)
@@ -935,30 +937,33 @@ ins_right {
     color = { fg = colors.green, gui = 'bold' },
 }
 
-ins_right {
-    'branch',
-    icon = '',
-    color = { fg = colors.violet, gui = 'bold' },
-}
-
-ins_right {
-    'diff',
-    -- Is it me or the symbol for modified us really weird
-    symbols = { added = ' ', modified = '󰝤 ', removed = ' ' },
-    diff_color = {
-        added = { fg = colors.green },
-        modified = { fg = colors.orange },
-        removed = { fg = colors.red },
-    },
-    cond = conditions.hide_in_width,
-}
-
 -- Add components to right sections
 ins_right {
     'o:encoding',       -- option component same as &encoding in viml
     fmt = string.upper, -- I'm not sure why it's upper case either ;)
     cond = conditions.hide_in_width,
     color = { fg = colors.green, gui = 'bold' },
+}
+
+ins_right {
+    -- filesize component
+    'filesize',
+    cond = conditions.buffer_not_empty,
+}
+
+ins_right { 'location' }
+
+ins_right { 'progress', color = { fg = colors.fg, gui = 'bold' } }
+
+ins_right {
+    'diagnostics',
+    sources = { 'nvim_diagnostic' },
+    symbols = { error = ' ', warn = ' ', info = ' ' },
+    diagnostics_color = {
+        color_error = { fg = colors.red },
+        color_warn = { fg = colors.yellow },
+        color_info = { fg = colors.cyan },
+    },
 }
 
 -- Now don't forget to initialize lualine
@@ -970,6 +975,9 @@ require('onedark').load()
 -- vim.o.cursorcolumn = true
 -- vim.o.cursorline = true
 vim.o.laststatus = 3
+-- vim.o.linebreak = true
+-- vim.o.wrap = true
+vim.cmd("set nowrap")
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
