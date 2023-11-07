@@ -1,6 +1,3 @@
-print "setup font"
-
-
 local cmd_ls_font = "fc-list | grep JetBrainsMono"
 local file = io.popen(cmd_ls_font)
 
