@@ -18,7 +18,7 @@ sudo dnf install git neovim ripgrep gopls xclip
 
 ### Install configs
 ```sh
-git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim
+git clone https://github.com/maxwelbm/nvim ~/.config/nvim --depth 1 && nvim
 ```
 
 ### Uninstall configs
