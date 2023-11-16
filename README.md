@@ -7,14 +7,31 @@ My Config Neovim
 ### Install dependences:
 ```sh
 # archlinux
-sudo pacman -S neovim ripgrep gopls xclip
+sudo pacman -S git neovim ripgrep gopls xclip
 
 # ubuntu
-sudo apt-get install neovim ripgrep gopls xclip
+sudo apt-get install git neovim ripgrep gopls xclip
 
 # fedora
-sudo dnf install neovim ripgrep gopls xclip
+sudo dnf install git neovim ripgrep gopls xclip
 ```
+
+### Install configs
+```sh
+git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim
+```
+
+### Uninstall configs
+```sh
+# Linux / Macos (unix)
+rm -rf ~/.config/nvim
+rm -rf ~/.local/share/nvim
+
+# Windows
+rd -r ~\AppData\Local\nvim
+rd -r ~\AppData\Local\nvim-data
+```
+
 
 ### For testing rune this code sh in your bash:
 ```sh
