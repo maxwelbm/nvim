@@ -16,12 +16,17 @@ sudo apt-get install git neovim ripgrep gopls xclip
 sudo dnf install git neovim ripgrep gopls xclip
 ```
 
-### Install configs
+### Install configs - Linux / Macos / Windows
 ```sh
+# install Linux / Macos
 git clone https://github.com/maxwelbm/nvim ~/.config/nvim --depth 1 && nvim
+
+# install Windows
+git clone https://github.com/maxwelbm/nvim $HOME\AppData\Local\nvim --depth 1
+nvim
 ```
 
-### Uninstall configs
+### Uninstall configs - Linux / Macos / Windows
 ```sh
 # Linux / Macos (unix)
 rm -rf ~/.config/nvim
