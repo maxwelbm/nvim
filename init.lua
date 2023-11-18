@@ -9,11 +9,9 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- [[ setup font ]]
-require("setup_font")
+-- require("setup_font")
 
 -- Install package manager
---    https://github.com/folke/lazy.nvim
---    `:help lazy.nvim.txt` for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
@@ -109,14 +107,6 @@ require('lazy').setup({
     'navarasu/onedark.nvim',
     lazy = true,
   },
-
-  {
-    -- Set lualine as statusline
-    'nvim-lualine/lualine.nvim',
-    -- See `:help lualine.txt`
-    lazy = true,
-  },
-
   {
     -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
@@ -161,8 +151,8 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  require 'kickstart.plugins.autoformat',
-  require 'kickstart.plugins.debug',
+  require 'nvim.plugins.autoformat',
+  require 'nvim.plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -590,8 +580,6 @@ require("nvim-tree").setup({
 })
 
 vim.keymap.set('n', '<leader>n', '<cmd>NvimTreeToggle<cr>', { desc = '[space|n] open explorer file menu' })
--- vim.keymap.set('n', '<c-n>', '<cmd>NvimTreeToggle<cr>', { desc = '[C|n] open explorer file menu' })
-
 vim.keymap.set("n", "<C-h>", "<c-w>h", { desc = "window: Focus left" })
 vim.keymap.set("n", "<C-l>", "<c-w>l", { desc = "window: Focus right" })
 vim.keymap.set("n", "<C-j>", "<c-w>j", { desc = "window: Focus down" })
@@ -608,55 +596,36 @@ require("toggleterm").setup({
 })
 
 require('nvim_comment').setup({
-  -- Linters prefer comment and line to have a space in between markers
-  marker_padding = true,
-  -- should comment out empty or whitespace only lines
-  comment_empty = true,
-  -- trim empty comment whitespace
-  comment_empty_trim_whitespace = true,
-  -- Should key mappings be created
-  create_mappings = true,
-  -- Normal mode mapping left hand side
-  line_mapping = "cl",
-  -- Visual/Operator mapping left hand side
-  operator_mapping = "c",
-  -- Hook function to call before commenting takes place
-  hook = nil
+  marker_padding = true,                -- Linters prefer comment and line to have a space in between markers
+  comment_empty = true,                 -- should comment out empty or whitespace only lines
+  comment_empty_trim_whitespace = true, -- trim empty comment whitespace
+  create_mappings = true,               -- Should key mappings be created
+  line_mapping = "cl",                  -- Normal mode mapping left hand side
+  operator_mapping = "c",               -- Visual/Operator mapping left hand side
+  hook = nil                            -- Hook function to call before commenting takes place
 })
 
 require('go').setup({
-  -- notify: use nvim-notify
-  notify = false,
-  -- auto commands
-  auto_format = true,
-  auto_lint = true,
-  -- linters: revive, errcheck, staticcheck, golangci-lint
-  linter = 'golangci-lint',
-  -- linter_flags: e.g., {revive = {'-config', '/path/to/config.yml'}}
-  linter_flags = {},
-  -- lint_prompt_style: qf (quickfix), vt (virtual text)
-  lint_prompt_style = 'vt',
-  -- formatter: goimports, gofmt, gofumpt, lsp
-  formatter = 'goimports',
-  -- maintain cursor position after formatting loaded buffer
-  maintain_cursor_pos = false,
-  -- test flags: -count=1 will disable cache
+  notify = false,              -- notify: use nvim-notify
+  auto_format = true,          -- auto commands
+  auto_lint = true,            -- linters: revive, errcheck, staticcheck, golangci-lint
+  linter = 'golangci-lint',    -- linter_flags: e.g., {revive = {'-config', '/path/to/config.yml'}}
+  linter_flags = {},           -- lint_prompt_style: qf (quickfix), vt (virtual text)
+  lint_prompt_style = 'vt',    -- formatter: goimports, gofmt, gofumpt, lsp
+  formatter = 'goimports',     -- maintain cursor position after formatting loaded buffer
+  maintain_cursor_pos = false, -- test flags: -count=1 will disable cache
   test_flags = { '-v' },
   test_timeout = '30s',
-  test_env = {},
-  -- show test result with popup window
+  test_env = {}, -- show test result with popup window
   test_popup = true,
   test_popup_auto_leave = false,
   test_popup_width = 80,
-  test_popup_height = 10,
-  -- test open
-  test_open_cmd = 'edit',
-  -- struct tags
+  test_popup_height = 10, -- test open
+  test_open_cmd = 'edit', -- struct tags
   tags_name = 'json',
   tags_options = { 'json=omitempty' },
   tags_transform = 'snakecase',
-  tags_flags = { '-skip-unexported' },
-  -- quick type
+  tags_flags = { '-skip-unexported' }, -- quick type
   quick_type_flags = { '--just-types' },
 })
 
@@ -664,9 +633,7 @@ require("ibl").setup {
   indent = { char = '┊' },
 }
 
--- The setup config table shows all available config options with their default values:
 require("presence").setup({
-  -- General options
   auto_update         = true,                       -- Update activity based on autocmd events (if `false`, map or manually execute `:lua package.loaded.presence:update()`)
   neovim_image_text   = "The One True Text Editor", -- Text displayed when hovered over the Neovim image
   main_image          = "neovim",                   -- Main image display (either "neovim" or "file")
@@ -678,33 +645,25 @@ require("presence").setup({
   buttons             = true,                       -- Configure Rich Presence button(s), either a boolean to enable/disable, a static table (`{{ label = "<label>", url = "<url>" }, ...}`, or a function(buffer: string, repo_url: string|nil): table)
   file_assets         = {},                         -- Custom file asset definitions keyed by file names and extensions (see default config at `lua/presence/file_assets.lua` for reference)
   show_time           = true,                       -- Show the timer
-
-  -- Rich Presence text options
-  editing_text        = "Editing %s",         -- Format string rendered when an editable file is loaded in the buffer (either string or function(filename: string): string)
-  file_explorer_text  = "Browsing %s",        -- Format string rendered when browsing a file explorer (either string or function(file_explorer_name: string): string)
-  git_commit_text     = "Committing changes", -- Format string rendered when committing changes in git (either string or function(filename: string): string)
-  plugin_manager_text = "Managing plugins",   -- Format string rendered when managing plugins (either string or function(plugin_manager_name: string): string)
-  reading_text        = "Reading %s",         -- Format string rendered when a read-only or unmodifiable file is loaded in the buffer (either string or function(filename: string): string)
-  workspace_text      = "Working on %s",      -- Format string rendered when in a git repository (either string or function(project_name: string|nil, filename: string): string)
-  line_number_text    = "Line %s out of %s",  -- Format string rendered when `enable_line_number` is set to true (either string or function(line_number: number, line_count: number): string)
+  editing_text        = "Editing %s",               -- Format string rendered when an editable file is loaded in the buffer (either string or function(filename: string): string)
+  file_explorer_text  = "Browsing %s",              -- Format string rendered when browsing a file explorer (either string or function(file_explorer_name: string): string)
+  git_commit_text     = "Committing changes",       -- Format string rendered when committing changes in git (either string or function(filename: string): string)
+  plugin_manager_text = "Managing plugins",         -- Format string rendered when managing plugins (either string or function(plugin_manager_name: string): string)
+  reading_text        = "Reading %s",               -- Format string rendered when a read-only or unmodifiable file is loaded in the buffer (either string or function(filename: string): string)
+  workspace_text      = "Working on %s",            -- Format string rendered when in a git repository (either string or function(project_name: string|nil, filename: string): string)
+  line_number_text    = "Line %s out of %s",        -- Format string rendered when `enable_line_number` is set to true (either string or function(line_number: number, line_count: number): string)
 })
 
--- Lua
 require('onedark').setup {
-  -- Main options --
-  style = 'dark',               -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
-  transparent = true,           -- Show/hide background
-  term_colors = true,           -- Change terminal color as per the selected theme style
-  ending_tildes = false,        -- Show the end-of-buffer tildes. By default they are hidden
-  cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
+  style = 'dark',                                                                      -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
+  transparent = true,                                                                  -- Show/hide background
+  term_colors = true,                                                                  -- Change terminal color as per the selected theme style
+  ending_tildes = false,                                                               -- Show the end-of-buffer tildes. By default they are hidden
+  cmp_itemkind_reverse = false,                                                        -- reverse item kind highlights in cmp menu
 
-  -- toggle theme style ---
   toggle_style_key = nil,                                                              -- keybind to toggle theme style. Leave it nil to disable it, or set it to a string, for example "<leader>ts"
   toggle_style_list = { 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light' }, -- List of styles to toggle between
 
-  -- Change code style ---
-  -- Options are italic, bold, underline, none
-  -- You can configure multiple style with comma separated, For e.g., keywords = 'italic,bold'
   code_style = {
     comments = 'italic',
     keywords = 'none',
@@ -713,16 +672,6 @@ require('onedark').setup {
     variables = 'none'
   },
 
-  -- Lualine options --
-  lualine = {
-    transparent = true, -- lualine center bar transparency
-  },
-
-  -- Custom Highlights --
-  colors = {},     -- Override default colors
-  highlights = {}, -- Override highlight groups
-
-  -- Plugins Config --
   diagnostics = {
     darker = true,     -- darker colors for diagnostic
     undercurl = true,  -- use undercurl instead of underline for diagnostics
@@ -731,39 +680,6 @@ require('onedark').setup {
 }
 
 require('onedark').load()
-
--- require("catppuccin").setup({
---     flavour = "frappe", -- latte, frappe, macchiato, mocha
---     background = { -- :h background
---         dark = "frappe",
---     },
---     transparent_background = true, -- disables setting the background color.
---
---     color_overrides = {},
---     custom_highlights = {},
---     integrations = {
---         cmp = true,
---         gitsigns = true,
---         nvimtree = true,
---         treesitter = true,
---         notify = false,
---         mini = false,
---     },
--- })
-
--- setup must be called before loading
--- vim.cmd.colorscheme "darcula"
--- vim.cmd.colorscheme "catppuccin"
-
--- vim.o.cursorcolumn = true
--- vim.o.cursorline = true
--- vim.o.linebreak = true
--- vim.o.wrap = true
-vim.cmd("set nowrap")
-
-
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
 
 vim.keymap.set("n", "<leader>df", "<cmd>vertical Git diff %<cr>", { desc = '[space|df] opens a git diff vertically' })
 
