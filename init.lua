@@ -8,7 +8,6 @@ vim.g.maplocalleader = ' '
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
-
 vim.o.wrap = false
 vim.o.cursorline = true
 
@@ -111,9 +110,13 @@ require('lazy').setup({
         },
     },
 
+    -- {
+    --     -- Theme inspired by Atom
+    --     'navarasu/onedark.nvim',
+    --     lazy = true,
+    -- },
     {
-        -- Theme inspired by Atom
-        'navarasu/onedark.nvim',
+        'catppuccin/nvim',
         lazy = true,
     },
     {
@@ -176,7 +179,7 @@ require('lazy').setup({
     { 'nvim-tree/nvim-web-devicons' },
     { 'terrortylor/nvim-comment' },
     { 'maxwelbm/gonv' },
-    { 'doums/darcula' },
+    -- { 'doums/darcula' },
     { 'andweeb/presence.nvim' },
     -- { 'nvim-lualine/lualine.nvim' },
 }, {})
@@ -666,38 +669,19 @@ require("presence").setup({
     line_number_text    = "Line %s out of %s",        -- Format string rendered when `enable_line_number` is set to true (either string or function(line_number: number, line_count: number): string)
 })
 
-require('onedark').setup {
-    style = 'dark',                                                                      -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
-    transparent = true,                                                                  -- Show/hide background
-    term_colors = true,                                                                  -- Change terminal color as per the selected theme style
-    ending_tildes = false,                                                               -- Show the end-of-buffer tildes. By default they are hidden
-    cmp_itemkind_reverse = false,                                                        -- reverse item kind highlights in cmp menu
-
-    toggle_style_key = nil,                                                              -- keybind to toggle theme style. Leave it nil to disable it, or set it to a string, for example "<leader>ts"
-    toggle_style_list = { 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light' }, -- List of styles to toggle between
-
-    code_style = {
-        comments = 'italic',
-        keywords = 'none',
-        functions = 'none',
-        strings = 'none',
-        variables = 'none'
-    },
-
-    diagnostics = {
-        darker = true,     -- darker colors for diagnostic
-        undercurl = true,  -- use undercurl instead of underline for diagnostics
-        background = true, -- use background color for virtual text
-    },
-
-    -- Lualine options
-    -- lualine = {
-    --     transparent = true, -- lualine center bar transparency
-    -- },
-}
-
-require('onedark').load()
 vim.keymap.set("n", "<leader>df", "<cmd>vertical Git diff %<cr>", { desc = '[space|df] opens a git diff vertically' })
 
 vim.o.laststatus = 0
+
+require("catppuccin").setup({
+	transparent_background = false,
+	term_colors = true,
+    flavour = "frappe", -- latte, frappe, macchiato, mocha
+    background = { -- :h background
+        light = "frappe",
+        dark = "mocha",
+    },
+})
+
+vim.cmd.colorscheme 'catppuccin'
 
