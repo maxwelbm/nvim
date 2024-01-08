@@ -11,13 +11,13 @@ vim.g.loaded_netrwPlugin = 1
 vim.o.wrap = false
 vim.o.cursorline = true
 
-local range = {}
-for i = 120, 999 do
-    table.insert(range, tostring(i))
-end
+-- local range = {}
+-- for i = 120, 999 do
+--     table.insert(range, tostring(i))
+-- end
 
-local colorcolumn = table.concat(range, ",")
-vim.api.nvim_command('let &colorcolumn="' .. colorcolumn .. '"')
+-- local colorcolumn = table.concat(range, ",")
+-- vim.api.nvim_command('let &colorcolumn="' .. colorcolumn .. '"')
 
 -- Install package manager
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -76,6 +76,7 @@ require('lazy').setup({
 
     -- Useful plugin to show you pending keybinds.
     { 'folke/which-key.nvim',  opts = {} },
+
     {
         -- Adds git related signs to the gutter, as well as utilities for managing changes
         'lewis6991/gitsigns.nvim',
@@ -127,9 +128,6 @@ require('lazy').setup({
         -- See `:help indent_blankline.txt`
     },
 
-    -- "gc" to comment visual regions/lines
-    { 'numToStr/Comment.nvim', opts = {} },
-
     -- Fuzzy Finder (files, lsp, etc)
     {
         'nvim-telescope/telescope.nvim',
@@ -173,14 +171,12 @@ require('lazy').setup({
     --
     --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
     -- { import = 'custom.plugins' },
-    { 'karb94/neoscroll.nvim' },
     { 'nvim-tree/nvim-tree.lua' },
-    { 'akinsho/toggleterm.nvim' },
     { 'nvim-tree/nvim-web-devicons' },
+
+    -- "c, cl" to comment visual regions/lines
     { 'terrortylor/nvim-comment' },
-    { 'maxwelbm/gonv' },
     -- { 'doums/darcula' },
-    { 'andweeb/presence.nvim' },
     -- { 'nvim-lualine/lualine.nvim' },
 }, {})
 
@@ -513,8 +509,6 @@ cmp.setup {
     },
 }
 
-require("neoscroll").setup()
-
 require("nvim-tree").setup({
     filters = {
         dotfiles = false,
@@ -605,11 +599,6 @@ vim.keymap.set("t", "<C-l>", "<C-\\><C-N><C-w>l", { desc = "window: Focus right"
 vim.keymap.set("t", "<C-j>", "<C-\\><C-N><C-w>j", { desc = "window: Focus down" })
 vim.keymap.set("t", "<C-k>", "<C-\\><C-N><C-w>k", { desc = "window: Focus up" })
 
-
-require("toggleterm").setup({
-    open_mapping = [[<c-\>]],
-})
-
 require('nvim_comment').setup({
     marker_padding = true,                -- Linters prefer comment and line to have a space in between markers
     comment_empty = true,                 -- should comment out empty or whitespace only lines
@@ -620,58 +609,13 @@ require('nvim_comment').setup({
     hook = nil                            -- Hook function to call before commenting takes place
 })
 
-require('go').setup({
-    notify = false,              -- notify: use nvim-notify
-    auto_format = true,          -- auto commands
-    auto_lint = true,            -- linters: revive, errcheck, staticcheck, golangci-lint
-    linter = 'golangci-lint',    -- linter_flags: e.g., {revive = {'-config', '/path/to/config.yml'}}
-    linter_flags = {},           -- lint_prompt_style: qf (quickfix), vt (virtual text)
-    lint_prompt_style = 'vt',    -- formatter: goimports, gofmt, gofumpt, lsp
-    formatter = 'goimports',     -- maintain cursor position after formatting loaded buffer
-    maintain_cursor_pos = false, -- test flags: -count=1 will disable cache
-    test_flags = { '-v' },
-    test_timeout = '30s',
-    test_env = {}, -- show test result with popup window
-    test_popup = true,
-    test_popup_auto_leave = false,
-    test_popup_width = 80,
-    test_popup_height = 10, -- test open
-    test_open_cmd = 'edit', -- struct tags
-    tags_name = 'json',
-    tags_options = { 'json=omitempty' },
-    tags_transform = 'snakecase',
-    tags_flags = { '-skip-unexported' }, -- quick type
-    quick_type_flags = { '--just-types' },
-})
-
 require("ibl").setup {
     indent = { char = '┊' },
 }
 
-require("presence").setup({
-    auto_update         = true,                       -- Update activity based on autocmd events (if `false`, map or manually execute `:lua package.loaded.presence:update()`)
-    neovim_image_text   = "The One True Text Editor", -- Text displayed when hovered over the Neovim image
-    main_image          = "neovim",                   -- Main image display (either "neovim" or "file")
-    client_id           = "793271441293967371",       -- Use your own Discord application client id (not recommended)
-    log_level           = nil,                        -- Log messages at or above this level (one of the following: "debug", "info", "warn", "error")
-    debounce_timeout    = 10,                         -- Number of seconds to debounce events (or calls to `:lua package.loaded.presence:update(<filename>, true)`)
-    enable_line_number  = false,                      -- Displays the current line number instead of the current project
-    blacklist           = {},                         -- A list of strings or Lua patterns that disable Rich Presence if the current file name, path, or workspace matches
-    buttons             = true,                       -- Configure Rich Presence button(s), either a boolean to enable/disable, a static table (`{{ label = "<label>", url = "<url>" }, ...}`, or a function(buffer: string, repo_url: string|nil): table)
-    file_assets         = {},                         -- Custom file asset definitions keyed by file names and extensions (see default config at `lua/presence/file_assets.lua` for reference)
-    show_time           = true,                       -- Show the timer
-    editing_text        = "Editing %s",               -- Format string rendered when an editable file is loaded in the buffer (either string or function(filename: string): string)
-    file_explorer_text  = "Browsing %s",              -- Format string rendered when browsing a file explorer (either string or function(file_explorer_name: string): string)
-    git_commit_text     = "Committing changes",       -- Format string rendered when committing changes in git (either string or function(filename: string): string)
-    plugin_manager_text = "Managing plugins",         -- Format string rendered when managing plugins (either string or function(plugin_manager_name: string): string)
-    reading_text        = "Reading %s",               -- Format string rendered when a read-only or unmodifiable file is loaded in the buffer (either string or function(filename: string): string)
-    workspace_text      = "Working on %s",            -- Format string rendered when in a git repository (either string or function(project_name: string|nil, filename: string): string)
-    line_number_text    = "Line %s out of %s",        -- Format string rendered when `enable_line_number` is set to true (either string or function(line_number: number, line_count: number): string)
-})
-
 vim.keymap.set("n", "<leader>df", "<cmd>vertical Git diff %<cr>", { desc = '[space|df] opens a git diff vertically' })
 
-vim.o.laststatus = 0
+vim.o.laststatus = 3
 
 require("catppuccin").setup({
 	transparent_background = false,
@@ -679,7 +623,7 @@ require("catppuccin").setup({
     flavour = "frappe", -- latte, frappe, macchiato, mocha
     background = { -- :h background
         light = "frappe",
-        dark = "mocha",
+        dark = "frappe",
     },
 })
 
