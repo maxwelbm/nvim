@@ -618,7 +618,7 @@ vim.keymap.set("n", "<leader>df", "<cmd>vertical Git diff %<cr>", { desc = '[spa
 vim.o.laststatus = 3
 
 require("catppuccin").setup({
-	transparent_background = false,
+	transparent_background = true,
 	term_colors = true,
     flavour = "frappe", -- latte, frappe, macchiato, mocha
     background = { -- :h background
