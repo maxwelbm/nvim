@@ -9,7 +9,7 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 vim.o.wrap = false
-vim.o.cursorline = true
+vim.o.cursorline = false
 
 -- local range = {}
 -- for i = 120, 999 do
@@ -524,6 +524,7 @@ require("nvim-tree").setup({
         update_root = false,
     },
     view = {
+        cursorline = false,
         adaptive_size = false,
         side = "left",
         width = 40,
