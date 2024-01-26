@@ -177,7 +177,8 @@ require('lazy').setup({
     -- "c, cl" to comment visual regions/lines
     { 'terrortylor/nvim-comment' },
     -- { 'doums/darcula' },
-    -- { 'nvim-lualine/lualine.nvim' },
+    { 'nvim-lualine/lualine.nvim' },
+    { 'maxwelbm/gonv' },
 }, {})
 
 -- [[ Setting options ]]
@@ -616,11 +617,171 @@ require("ibl").setup {
 
 vim.keymap.set("n", "<leader>df", "<cmd>vertical Git diff %<cr>", { desc = '[space|df] opens a git diff vertically' })
 
-vim.o.laststatus = 3
+-- Eviline config for lualine
+-- Author: shadmansaleh
+-- Credit: glepnir
+local lualine = require('lualine')
+
+-- Color table for highlights
+-- stylua: ignore
+local colors = {
+  bg       = '#202328',
+  fg       = '#bbc2cf',
+  yellow   = '#ECBE7B',
+  cyan     = '#008080',
+  darkblue = '#081633',
+  green    = '#98be65',
+  orange   = '#FF8800',
+  violet   = '#a9a1e1',
+  magenta  = '#c678dd',
+  blue     = '#51afef',
+  red      = '#ec5f67',
+}
+
+local conditions = {
+  buffer_not_empty = function()
+    return vim.fn.empty(vim.fn.expand('%:t')) ~= 1
+  end,
+  hide_in_width = function()
+    return vim.fn.winwidth(0) > 80
+  end,
+  check_git_workspace = function()
+    local filepath = vim.fn.expand('%:p:h')
+    local gitdir = vim.fn.finddir('.git', filepath .. ';')
+    return gitdir and #gitdir > 0 and #gitdir < #filepath
+  end,
+}
+
+-- Config
+local config = {
+    options = {
+        -- Disable sections and component separators
+        component_separators = '',
+        section_separators = '',
+        theme = "catppuccin",
+    },
+    sections = {
+        -- these are to remove the defaults
+        lualine_a = {},
+        lualine_b = {},
+        lualine_y = {},
+        lualine_z = {},
+        -- These will be filled later
+        lualine_c = {},
+        lualine_x = {},
+    },
+    inactive_sections = {
+        -- these are to remove the defaults
+        lualine_a = {},
+        lualine_b = {},
+        lualine_y = {},
+        lualine_z = {},
+        lualine_c = {},
+        lualine_x = {},
+    },
+}
+
+-- Inserts a component in lualine_c at left section
+local function ins_left(component)
+  table.insert(config.sections.lualine_c, component)
+end
+
+-- Inserts a component in lualine_x at right section
+local function ins_right(component)
+  table.insert(config.sections.lualine_x, component)
+end
+
+ins_left {
+  -- mode component
+  function()
+    return '▊ '
+  end,
+  color = function()
+    -- auto change color according to neovims mode
+    local mode_color = {
+      n = colors.red,
+      i = colors.green,
+      v = colors.blue,
+      [''] = colors.blue,
+      V = colors.blue,
+      c = colors.magenta,
+      no = colors.red,
+      s = colors.orange,
+      S = colors.orange,
+      [''] = colors.orange,
+      ic = colors.yellow,
+      R = colors.violet,
+      Rv = colors.violet,
+      cv = colors.red,
+      ce = colors.red,
+      r = colors.cyan,
+      rm = colors.cyan,
+      ['r?'] = colors.cyan,
+      ['!'] = colors.red,
+      t = colors.red,
+    }
+    return { fg = mode_color[vim.fn.mode()] }
+  end,
+  padding = { right = 1 },
+}
+
+ins_left {
+    'filename',
+    cond = conditions.buffer_not_empty,
+    color = { fg = colors.magenta, gui = 'bold' },
+}
+
+ins_left {
+    'branch',
+    icon = '',
+    color = { fg = colors.violet, gui = 'bold' },
+}
+
+ins_left {
+    'diff',
+    -- Is it me or the symbol for modified us really weird
+    symbols = { added = '+', modified = 'x', removed = '-' },
+    diff_color = {
+        added = { fg = colors.green },
+        modified = { fg = colors.orange },
+        removed = { fg = colors.red },
+    },
+    cond = conditions.hide_in_width,
+}
+
+ins_right {
+    'diagnostics',
+    sources = { 'nvim_diagnostic' },
+    symbols = { error = ' ', warn = ' ', info = ' ' },
+    diagnostics_color = {
+        color_error = { fg = colors.red },
+        color_warn = { fg = colors.yellow },
+        color_info = { fg = colors.cyan },
+    },
+}
+
+ins_right {
+    -- filesize component
+    'filesize',
+    cond = conditions.buffer_not_empty,
+}
+
+ins_right { 'location' }
+
+-- Insert mid section. You can make any number of sections in neovim :)
+-- for lualine it's any number greater then 2
+ins_left {
+    function()
+        return '%='
+    end,
+}
+
+-- Now don't forget to initialize lualine
+lualine.setup(config)
 
 require("catppuccin").setup({
-	transparent_background = true,
-	term_colors = true,
+    transparent_background = true,
+    term_colors = true,
     flavour = "frappe", -- latte, frappe, macchiato, mocha
     background = { -- :h background
         light = "frappe",
@@ -630,3 +791,47 @@ require("catppuccin").setup({
 
 vim.cmd.colorscheme 'catppuccin'
 
+-- vim.cmd([[
+--      augroup goimports
+--         autocmd!
+--         autocmd BufWritePre *.go :silent! :%!goimports
+--      augroup END
+-- ]])
+
+require('go').setup({
+    -- notify: use nvim-notify
+    notify = true,
+    -- auto commands
+    auto_format = true,
+    auto_lint = true,
+    -- linters: revive, errcheck, staticcheck, golangci-lint
+    linter = 'golangci-lint',
+    -- linter_flags: e.g., {revive = {'-config', '/path/to/config.yml'}}
+    linter_flags = {},
+    -- lint_prompt_style: qf (quickfix), vt (virtual text)
+    lint_prompt_style = 'qf',
+    -- formatter: goimports, gofmt, gofumpt, lsp
+    formatter = 'goimports',
+    -- maintain cursor position after formatting loaded buffer
+    maintain_cursor_pos = false,
+    -- test flags: -count=1 will disable cache
+    test_flags = {'-v'},
+    test_timeout = '30s',
+    test_env = {},
+    -- show test result with popup window
+    test_popup = true,
+    test_popup_auto_leave = false,
+    test_popup_width = 80,
+    test_popup_height = 10,
+    -- test open
+    test_open_cmd = 'edit',
+    -- struct tags
+    tags_name = 'json',
+    tags_options = {'json=omitempty'},
+    tags_transform = 'snakecase',
+    tags_flags = {'-skip-unexported'},
+    -- quick type
+    quick_type_flags = {'--just-types'},
+})
+
+vim.o.laststatus = 3
