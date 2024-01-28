@@ -162,7 +162,7 @@ require('lazy').setup({
     --       These are some example plugins that I've included in the kickstart repository.
     --       Uncomment any of the lines below to enable them.
     -- require 'nvim.plugins.autoformat',
-    -- require 'nvim.plugins.debug',
+    require 'plugins.debug',
 
     -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
     --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -809,7 +809,7 @@ require('go').setup({
     -- linter_flags: e.g., {revive = {'-config', '/path/to/config.yml'}}
     linter_flags = {},
     -- lint_prompt_style: qf (quickfix), vt (virtual text)
-    lint_prompt_style = 'qf',
+    lint_prompt_tyle = 'qf',
     -- formatter: goimports, gofmt, gofumpt, lsp
     formatter = 'goimports',
     -- maintain cursor position after formatting loaded buffer
@@ -819,7 +819,7 @@ require('go').setup({
     test_timeout = '30s',
     test_env = {},
     -- show test result with popup window
-    test_popup = true,
+    test_popup = false,
     test_popup_auto_leave = false,
     test_popup_width = 80,
     test_popup_height = 10,
