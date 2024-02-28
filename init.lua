@@ -9,7 +9,9 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 vim.o.wrap = false
--- vim.o.cursorline = true
+vim.o.cursorline = false
+-- vim.api.nvim_command('set colorcolumn=120')
+
 
 -- Install package manager
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -155,16 +157,10 @@ require('lazy').setup({
     --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
     -- { import = 'custom.plugins' },
 
-    -- "c, cl" to comment visual regions/lines
     { 'terrortylor/nvim-comment' },
-    -- { 'doums/darcula' },
-    -- { 'nvim-lualine/lualine.nvim' },
-    -- { 'maxwelbm/gonv' },
-    {
-        'ellisonleao/gruvbox.nvim',
-        lazy = false,
-        priority = 1000,
-    },
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+    { 'nvim-tree/nvim-tree.lua' },
+    { 'nvim-tree/nvim-web-devicons' },
 }, {})
 
 -- [[ Setting options ]]
@@ -383,7 +379,7 @@ local on_attach = function(_, bufnr)
 
     -- See `:help K` for why this keymap
     nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-    nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+    -- nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
     -- Lesser used LSP functionality
     nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -496,15 +492,99 @@ cmp.setup {
     },
 }
 
-vim.keymap.set("n", "<C-h>", "<c-w>h", { desc = "window: Focus left" })
-vim.keymap.set("n", "<C-l>", "<c-w>l", { desc = "window: Focus right" })
-vim.keymap.set("n", "<C-j>", "<c-w>j", { desc = "window: Focus down" })
-vim.keymap.set("n", "<C-k>", "<c-w>k", { desc = "window: Focus up" })
+require("nvim-tree").setup({
+    filters = {
+        dotfiles = false,
+        exclude = { vim.fn.stdpath "config" .. "/lua/custom" },
+    },
+    disable_netrw = true,
+    hijack_netrw = true,
+    hijack_cursor = true,
+    hijack_unnamed_buffer_when_opening = false,
+    sync_root_with_cwd = true,
+    update_focused_file = {
+        enable = true,
+        update_root = false,
+    },
+    view = {
+        adaptive_size = false,
+        side = "left",
+        width = 40,
+        preserve_window_proportions = true,
+        cursorline = false,
+    },
+    git = {
+        enable = false,
+        ignore = true,
+    },
+    filesystem_watchers = {
+        enable = true,
+    },
+    actions = {
+        open_file = {
+            resize_window = true,
+        },
+    },
+    renderer = {
+        root_folder_label = false,
+        highlight_git = false,
+        highlight_opened_files = "none",
+        indent_markers = {
+            enable = false,
+        },
+        icons = {
+            show = {
+                file = true,
+                folder = true,
+                folder_arrow = true,
+                git = true,
+            },
+            glyphs = {
+                default = "󰈚",
+                symlink = "",
+                folder = {
+                    default = "",
+                    empty = "",
+                    empty_open = "",
+                    open = "",
+                    symlink = "",
+                    symlink_open = "",
+                    arrow_open = "",
+                    arrow_closed = "",
+                    -- arrow_open = "",
+                    -- arrow_closed = "",
+                },
+                git = {
+                    unstaged = "✗",
+                    staged = "✓",
+                    unmerged = "",
+                    renamed = "➜",
+                    untracked = "★",
+                    deleted = "",
+                    ignored = "◌",
+                },
+            },
+        },
+    },
+})
 
-vim.keymap.set("t", "<C-h>", "<C-\\><C-N><C-w>h", { desc = "window: Focus left" })
-vim.keymap.set("t", "<C-l>", "<C-\\><C-N><C-w>l", { desc = "window: Focus right" })
-vim.keymap.set("t", "<C-j>", "<C-\\><C-N><C-w>j", { desc = "window: Focus down" })
-vim.keymap.set("t", "<C-k>", "<C-\\><C-N><C-w>k", { desc = "window: Focus up" })
+vim.keymap.set('n', '<leader>n', '<cmd>NvimTreeToggle<cr>', { desc = '[space|n] open explorer file menu' })
+vim.keymap.set("n", "<leader>h", "<c-w>h", { desc = "window: Focus left" })
+vim.keymap.set("n", "<leader>l", "<c-w>l", { desc = "window: Focus right" })
+vim.keymap.set("n", "<leader>j", "<c-w>j", { desc = "window: Focus down" })
+vim.keymap.set("n", "<leader>k", "<c-w>k", { desc = "window: Focus up" })
+vim.keymap.set("t", "<leader>h", "<C-\\><C-N><C-w>h", { desc = "window: Focus left" })
+vim.keymap.set("t", "<leader>l", "<C-\\><C-N><C-w>l", { desc = "window: Focus right" })
+vim.keymap.set("t", "<leader>j", "<C-\\><C-N><C-w>j", { desc = "window: Focus down" })
+vim.keymap.set("t", "<leader>k", "<C-\\><C-N><C-w>k", { desc = "window: Focus up" })
+
+-- Atalhos para redimensionar a janela verticalmente
+vim.api.nvim_set_keymap('n', '<C-h>', ':vertical resize -2<CR>', { desc = "", noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-l>', ':vertical resize +2<CR>', { desc = "", noremap = true, silent = true })
+
+-- Atalhos para redimensionar a janela horizontalmente
+vim.api.nvim_set_keymap('n', '<C-k>', ':resize -2<CR>', { desc = "", noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-j>', ':resize +2<CR>', { desc = "", noremap = true, silent = true })
 
 require('nvim_comment').setup({
     marker_padding = true,                -- Linters prefer comment and line to have a space in between markers
@@ -522,32 +602,53 @@ require("ibl").setup {
 
 vim.keymap.set("n", "<leader>df", "<cmd>vertical Git diff %<cr>", { desc = '[space|df] opens a git diff vertically' })
 
--- Default options:
-require("gruvbox").setup({
-    terminal_colors = true, -- add neovim terminal colors
-    undercurl = true,
-    underline = true,
-    bold = true,
-    italic = {
-        strings = true,
-        emphasis = true,
-        comments = true,
-        operators = false,
-        folds = true,
+require("catppuccin").setup({
+    flavour = "mocha", -- latte, frappe, macchiato, mocha
+    background = { -- :h background
+        light = "latte",
+        dark = "mocha",
     },
-    strikethrough = true,
-    invert_selection = false,
-    invert_signs = false,
-    invert_tabline = false,
-    invert_intend_guides = false,
-    inverse = true, -- invert background for search, diffs, statuslines and errors
-    contrast = "", -- can be "hard", "soft" or empty string
-    palette_overrides = {},
-    overrides = {},
-    dim_inactive = false,
-    transparent_mode = false,
+    transparent_background = true, -- disables setting the background color.
+    show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
+    term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
+    dim_inactive = {
+        enabled = false, -- dims the background color of inactive window
+        shade = "dark",
+        percentage = 0.15, -- percentage of the shade to apply to the inactive window
+    },
+    no_italic = false, -- Force no italic
+    no_bold = false, -- Force no bold
+    no_underline = false, -- Force no underline
+    styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
+        comments = { "italic" }, -- Change the style of comments
+        conditionals = { "italic" },
+        loops = {},
+        functions = {},
+        keywords = {},
+        strings = {},
+        variables = {},
+        numbers = {},
+        booleans = {},
+        properties = {},
+        types = {},
+        operators = {},
+        -- miscs = {}, -- Uncomment to turn off hard-coded styles
+    },
+    integrations = {
+        cmp = true,
+        gitsigns = true,
+        nvimtree = true,
+        treesitter = true,
+        notify = true,
+        mini = {
+            enabled = true,
+            indentscope_color = "",
+        },
+        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+    },
 })
 
-vim.cmd.colorscheme 'gruvbox'
+-- setup must be called before loading
+vim.cmd.colorscheme "catppuccin"
 
 vim.o.laststatus = 3
