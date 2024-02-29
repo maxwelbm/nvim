@@ -174,8 +174,8 @@ vim.o.hlsearch = false
 vim.wo.number = true
 vim.wo.relativenumber = true
 
--- local columns = { 80, 120 } -- Coloque os números das colunas limite desejadas aqui
--- Define as colunas de limite
+-- local columns = { 80, 120 } -- Coloque os números das colunas limit desejadas aqui
+-- Define as colunas de limit
 -- vim.wo.colorcolumn = table.concat(columns, ',')
 
 -- Enable mouse mode
@@ -533,6 +533,16 @@ require("nvim-tree").setup({
             enable = false,
         },
         icons = {
+            web_devicons = {
+                file = {
+                    enable = false,
+                    color = false,
+                },
+                folder = {
+                    enable = false,
+                    color = false,
+                },
+            },
             show = {
                 file = true,
                 folder = true,
@@ -540,7 +550,7 @@ require("nvim-tree").setup({
                 git = true,
             },
             glyphs = {
-                default = "󰈚",
+                default = "󰅩",
                 symlink = "",
                 folder = {
                     default = "",
@@ -603,12 +613,12 @@ require("ibl").setup {
 vim.keymap.set("n", "<leader>df", "<cmd>vertical Git diff %<cr>", { desc = '[space|df] opens a git diff vertically' })
 
 require("catppuccin").setup({
-    flavour = "mocha", -- latte, frappe, macchiato, mocha
+    -- flavour = "frappe", -- latte, frappe, macchiato, mocha
     background = { -- :h background
         light = "latte",
-        dark = "mocha",
+        dark = "frappe",
     },
-    transparent_background = true, -- disables setting the background color.
+    transparent_background = false, -- disables setting the background color.
     show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
     term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
     dim_inactive = {
