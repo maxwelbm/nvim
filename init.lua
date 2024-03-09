@@ -9,7 +9,7 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 vim.o.wrap = false
-vim.o.cursorline = false
+vim.o.cursorline = true
 -- vim.api.nvim_command('set colorcolumn=120')
 
 
@@ -69,7 +69,7 @@ require('lazy').setup({
     },
 
     -- Useful plugin to show you pending keybinds.
-    { 'folke/which-key.nvim',  opts = {} },
+    { 'folke/which-key.nvim',       opts = {} },
 
     {
         -- Adds git related signs to the gutter, as well as utilities for managing changes
@@ -158,7 +158,42 @@ require('lazy').setup({
     -- { import = 'custom.plugins' },
 
     { 'terrortylor/nvim-comment' },
-    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+    { "NTBBloodbath/doom-one.nvim",
+        setup = function()
+            -- Add color to cursor
+            vim.g.doom_one_cursor_coloring = false
+            -- Set :terminal colors
+            vim.g.doom_one_terminal_colors = true
+            -- Enable italic comments
+            vim.g.doom_one_italic_comments = false
+            -- Enable TS support
+            vim.g.doom_one_enable_treesitter = true
+            -- Color whole diagnostic text or only underline
+            vim.g.doom_one_diagnostics_text_color = false
+            -- Enable transparent background
+            vim.g.doom_one_transparent_background = false -- TODO: enable transparent not work
+
+            -- Pumblend transparency
+            vim.g.doom_one_pumblend_enable = false
+            vim.g.doom_one_pumblend_transparency = 20
+
+            -- Plugins integration
+            vim.g.doom_one_plugin_neorg = true
+            vim.g.doom_one_plugin_barbar = false
+            vim.g.doom_one_plugin_telescope = false
+            vim.g.doom_one_plugin_neogit = true
+            vim.g.doom_one_plugin_nvim_tree = true
+            vim.g.doom_one_plugin_dashboard = true
+            vim.g.doom_one_plugin_startify = true
+            vim.g.doom_one_plugin_whichkey = true
+            vim.g.doom_one_plugin_indent_blankline = true
+            vim.g.doom_one_plugin_vim_illuminate = true
+            vim.g.doom_one_plugin_lspsaga = false
+        end,
+        config = function()
+            vim.cmd("colorscheme doom-one")
+        end,
+    },
     { 'nvim-tree/nvim-tree.lua' },
     { 'nvim-tree/nvim-web-devicons' },
 }, {})
@@ -282,7 +317,7 @@ require('nvim-treesitter.configs').setup {
     sync_install = true,
     ignore_install = {},
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
+    ensure_installed = { 'c', 'cpp', 'rust', 'go', 'lua', 'python', 'ruby', 'php', 'javascript', 'typescript', 'vim' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -366,6 +401,16 @@ local on_attach = function(_, bufnr)
 
         vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
     end
+
+    vim.lsp.with(
+        vim.lsp.diagnostic.on_publish_diagnostics,
+        {
+            virtual_text = false,
+            signs = true,
+            update_in_insert = false,
+            underline = true,
+        }
+    )
 
     nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
     nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
@@ -507,11 +552,11 @@ require("nvim-tree").setup({
         update_root = false,
     },
     view = {
-        adaptive_size = false,
+        adaptive_size = true,
         side = "left",
-        width = 40,
-        preserve_window_proportions = true,
-        cursorline = false,
+        -- width = 30,
+        preserve_window_proportions = false,
+        cursorline = true,
     },
     git = {
         enable = false,
@@ -535,12 +580,12 @@ require("nvim-tree").setup({
         icons = {
             web_devicons = {
                 file = {
-                    enable = false,
-                    color = false,
+                    enable = true,
+                    color = true,
                 },
                 folder = {
-                    enable = false,
-                    color = false,
+                    enable = true,
+                    color = true,
                 },
             },
             show = {
@@ -611,54 +656,6 @@ require("ibl").setup {
 }
 
 vim.keymap.set("n", "<leader>df", "<cmd>vertical Git diff %<cr>", { desc = '[space|df] opens a git diff vertically' })
-
-require("catppuccin").setup({
-    -- flavour = "frappe", -- latte, frappe, macchiato, mocha
-    background = { -- :h background
-        light = "latte",
-        dark = "frappe",
-    },
-    transparent_background = false, -- disables setting the background color.
-    show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
-    term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
-    dim_inactive = {
-        enabled = false, -- dims the background color of inactive window
-        shade = "dark",
-        percentage = 0.15, -- percentage of the shade to apply to the inactive window
-    },
-    no_italic = false, -- Force no italic
-    no_bold = false, -- Force no bold
-    no_underline = false, -- Force no underline
-    styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
-        comments = { "italic" }, -- Change the style of comments
-        conditionals = { "italic" },
-        loops = {},
-        functions = {},
-        keywords = {},
-        strings = {},
-        variables = {},
-        numbers = {},
-        booleans = {},
-        properties = {},
-        types = {},
-        operators = {},
-        -- miscs = {}, -- Uncomment to turn off hard-coded styles
-    },
-    integrations = {
-        cmp = true,
-        gitsigns = true,
-        nvimtree = true,
-        treesitter = true,
-        notify = true,
-        mini = {
-            enabled = true,
-            indentscope_color = "",
-        },
-        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
-    },
-})
-
--- setup must be called before loading
-vim.cmd.colorscheme "catppuccin"
+vim.keymap.set("n", "<leader>q", "<cmd>qa<cr>", { desc = '[space|q] quit from all' })
 
 vim.o.laststatus = 3
