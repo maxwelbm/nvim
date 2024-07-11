@@ -1,6 +1,6 @@
 -- Set <space> as the leader key
 -- See `:help mapleader`
---  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
+-- NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
@@ -11,7 +11,6 @@ vim.g.loaded_netrwPlugin = 1
 vim.o.wrap = false
 vim.o.cursorline = true
 -- vim.api.nvim_command('set colorcolumn=120')
-
 
 -- Install package manager
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -77,11 +76,23 @@ require('lazy').setup({
         opts = {
             -- See `:help gitsigns.txt`
             signs = {
-                add = { text = '+' },
-                change = { text = '~' },
+                add = { text = '▊' },
+                change = { text = '▊' },
                 delete = { text = '_' },
                 topdelete = { text = '‾' },
                 changedelete = { text = '~' },
+
+                -- add = { text = '│' },
+                -- change = { text = '│' },
+                -- delete = { text = '_' },
+                -- topdelete = { text = '‾' },
+                -- changedelete = { text = '~' },
+
+                -- add = { text = '+' },
+                -- change = { text = '~' },
+                -- delete = { text = '_' },
+                -- topdelete = { text = '‾' },
+                -- changedelete = { text = '~' },
             },
             on_attach = function(bufnr)
                 vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk,
@@ -142,60 +153,23 @@ require('lazy').setup({
         },
         build = ':TSUpdate',
     },
-
-    -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
-    --       These are some example plugins that I've included in the kickstart repository.
-    --       Uncomment any of the lines below to enable them.
-    -- require 'nvim.plugins.autoformat',
-    -- require 'plugins.debug',
-
-    -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-    --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
-    --    up-to-date with whatever is in the kickstart repo.
-    --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-    --
-    --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-    -- { import = 'custom.plugins' },
-
     { 'terrortylor/nvim-comment' },
     { "NTBBloodbath/doom-one.nvim",
         setup = function()
-            -- Add color to cursor
-            vim.g.doom_one_cursor_coloring = false
-            -- Set :terminal colors
-            vim.g.doom_one_terminal_colors = true
-            -- Enable italic comments
-            vim.g.doom_one_italic_comments = false
-            -- Enable TS support
-            vim.g.doom_one_enable_treesitter = true
-            -- Color whole diagnostic text or only underline
-            vim.g.doom_one_diagnostics_text_color = false
-            -- Enable transparent background
-            vim.g.doom_one_transparent_background = false -- TODO: enable transparent not work
-
-            -- Pumblend transparency
-            vim.g.doom_one_pumblend_enable = false
-            vim.g.doom_one_pumblend_transparency = 20
-
-            -- Plugins integration
-            vim.g.doom_one_plugin_neorg = true
-            vim.g.doom_one_plugin_barbar = false
-            vim.g.doom_one_plugin_telescope = false
-            vim.g.doom_one_plugin_neogit = true
-            vim.g.doom_one_plugin_nvim_tree = true
-            vim.g.doom_one_plugin_dashboard = true
-            vim.g.doom_one_plugin_startify = true
-            vim.g.doom_one_plugin_whichkey = true
-            vim.g.doom_one_plugin_indent_blankline = true
-            vim.g.doom_one_plugin_vim_illuminate = true
-            vim.g.doom_one_plugin_lspsaga = false
+            vim.g.doom_one_transparent_background = true -- TODO: enable transparent not work
         end,
         config = function()
-            vim.cmd("colorscheme doom-one")
+        vim.cmd.colorscheme("doom-one")
         end,
     },
     { 'nvim-tree/nvim-tree.lua' },
     { 'nvim-tree/nvim-web-devicons' },
+    { 'maxwelbm/nvim-go' },
+    -- { 'andweeb/presence.nvim' },    
+    {
+        'IogaMaster/neocord',
+        event = "VeryLazy"
+    },
 }, {})
 
 -- [[ Setting options ]]
@@ -210,8 +184,10 @@ vim.wo.number = true
 vim.wo.relativenumber = true
 
 -- local columns = { 80, 120 } -- Coloque os números das colunas limit desejadas aqui
--- Define as colunas de limit
+-- -- Define as colunas de limit
 -- vim.wo.colorcolumn = table.concat(columns, ',')
+-- vim.opt.colorcolumn = "80,100"
+vim.opt.colorcolumn = "80"
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -271,15 +247,48 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
-require('telescope').setup {
+require('telescope').setup{
     defaults = {
-        mappings = {
-            i = {
-                ['<C-u>'] = false,
-                ['<C-d>'] = false,
+        vimgrep_arguments = {
+            'rg',
+            '--color=never',
+            '--no-heading',
+            '--with-filename',
+            '--line-number',
+            '--column',
+            '--smart-case'
+        },
+        prompt_prefix = "> ",
+        selection_caret = "> ",
+        entry_prefix = "  ",
+        initial_mode = "insert",
+        selection_strategy = "reset",
+        sorting_strategy = "descending",
+        layout_strategy = "horizontal",
+        layout_config = {
+            horizontal = {
+                mirror = false,
+            },
+            vertical = {
+                mirror = false,
             },
         },
-    },
+        file_sorter =  require'telescope.sorters'.get_fuzzy_file,
+        file_ignore_patterns = {},
+        generic_sorter =  require'telescope.sorters'.get_generic_fuzzy_sorter,
+        path_display = {},
+        winblend = 0,
+        border = {},
+        borderchars = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
+        color_devicons = true,
+        use_less = true,
+        set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
+        file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
+        grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
+        qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
+        -- Developer configurations: Not meant for general override
+        buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
+    }
 }
 
 -- Enable telescope fzf native, if installed
@@ -580,12 +589,12 @@ require("nvim-tree").setup({
         icons = {
             web_devicons = {
                 file = {
-                    enable = true,
-                    color = true,
+                    enable = false,
+                    color = false,
                 },
                 folder = {
-                    enable = true,
-                    color = true,
+                    enable = false,
+                    color = false,
                 },
             },
             show = {
@@ -652,10 +661,67 @@ require('nvim_comment').setup({
 })
 
 require("ibl").setup {
-    indent = { char = '┊' },
+    -- indent = { char = '┊' },
+    indent = { char = '⎪' },
 }
 
 vim.keymap.set("n", "<leader>df", "<cmd>vertical Git diff %<cr>", { desc = '[space|df] opens a git diff vertically' })
 vim.keymap.set("n", "<leader>q", "<cmd>qa<cr>", { desc = '[space|q] quit from all' })
 
-vim.o.laststatus = 3
+vim.keymap.set("n", "<leader>gf", "<cmd>GoTestFunc<cr>", { desc = '[space|gf] executable test go all test functions' })
+vim.keymap.set("n", "<leader>gt", "<cmd>GoTestFile<cr>", { desc = '[space|gt] executable test go all file' })
+
+require('go').setup({
+    -- notify: use nvim-notify
+    notify = true,
+    -- auto commands
+    auto_format = true,
+    auto_lint = true,
+    -- linters: revive, errcheck, staticcheck, golangci-lint
+    linter = 'errcheck',
+    -- linter_flags: e.g., {revive = {'-config', '/path/to/config.yml'}}
+    linter_flags = {},
+    -- lint_prompt_style: qf (quickfix), vt (virtual text)
+    lint_prompt_style = 'vt',
+    -- formatter: goimports, gofmt, gofumpt, lsp
+    formatter = 'goimports',
+    maintain_cursor_pos = false,
+    test_flags = {'-v'},
+    test_timeout = '30s',
+    test_env = {},
+    test_popup = true,
+    test_popup_auto_leave = false,
+    test_popup_width = 80,
+    test_popup_height = 10,
+    test_open_cmd = 'edit',
+    tags_name = 'json',
+    tags_options = {'json=omitempty'},
+    tags_transform = 'snakecase',
+    tags_flags = {'-skip-unexported'},
+    quick_type_flags = {'--just-types'},
+})
+
+-- The setup config table shows all available config options with their default values:
+require("neocord").setup({
+    logo                = "auto",
+    logo_tooltip        = nil,
+    main_image          = "language",
+    client_id           = "1157438221865717891",
+    log_level           = nil,
+    debounce_timeout    = 10,
+    blacklist           = {},
+    file_assets         = {},
+    show_time           = true,
+    global_timer        = true,
+    editing_text        = "Editing %s",
+    file_explorer_text  = "Browsing %s",
+    git_commit_text     = "Committing changes",
+    plugin_manager_text = "Managing plugins",
+    reading_text        = "Reading %s",
+    workspace_text      = "Working on %s",
+    line_number_text    = "Line %s out of %s",
+    terminal_text       = "Using Terminal",
+})
+
+vim.o.laststatus = 0
+
