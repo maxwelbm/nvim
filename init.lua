@@ -30,11 +30,11 @@ require('lazy').setup({
     -- NOTE: First, some plugins that don't require any configuration
 
     -- Git related plugins
-    'tpope/vim-fugitive',
-    'tpope/vim-rhubarb',
-
-    -- Detect tabstop and shiftwidth automatically
-    'tpope/vim-sleuth',
+    -- 'tpope/vim-fugitive',
+    -- 'tpope/vim-rhubarb',
+    --
+    -- -- Detect tabstop and shiftwidth automatically
+    -- 'tpope/vim-sleuth',
 
     -- NOTE: This is where your plugins related to LSP can be installed.
     --  The configuration is done below. Search for lspconfig to find it below.
@@ -115,7 +115,6 @@ require('lazy').setup({
             current_line_blame_opts = { delay = 1000, virtual_text_pos = "eol" },
         },
     },
-
     {
         -- Add indentation guides even on blank lines
         'lukas-reineke/indent-blankline.nvim',
@@ -154,22 +153,24 @@ require('lazy').setup({
         build = ':TSUpdate',
     },
     { 'terrortylor/nvim-comment' },
-    { "NTBBloodbath/doom-one.nvim",
-        setup = function()
-            vim.g.doom_one_transparent_background = true -- TODO: enable transparent not work
-        end,
-        config = function()
-        vim.cmd.colorscheme("doom-one")
-        end,
-    },
+    -- { "NTBBloodbath/doom-one.nvim",
+    --     setup = function()
+    --         vim.g.doom_one_transparent_background = true -- TODO: enable transparent not work
+    --     end,
+    --     config = function()
+    --     vim.cmd.colorscheme("doom-one")
+    --     end,
+    -- },
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
     { 'nvim-tree/nvim-tree.lua' },
     { 'nvim-tree/nvim-web-devicons' },
-    { 'maxwelbm/nvim-go' },
-    -- { 'andweeb/presence.nvim' },    
-    {
-        'IogaMaster/neocord',
-        event = "VeryLazy"
-    },
+    -- { 'maxwelbm/nvim-go' },
+    -- { 'andweeb/presence.nvim' },
+    -- {
+    --     'IogaMaster/neocord',
+    --     event = "VeryLazy"
+    -- },
+    -- { 'rafaelsq/nvim-goc.lua' },
 }, {})
 
 -- [[ Setting options ]]
@@ -187,7 +188,7 @@ vim.wo.relativenumber = true
 -- -- Define as colunas de limit
 -- vim.wo.colorcolumn = table.concat(columns, ',')
 -- vim.opt.colorcolumn = "80,100"
-vim.opt.colorcolumn = "80"
+-- vim.opt.colorcolumn = "80"
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -589,7 +590,7 @@ require("nvim-tree").setup({
         icons = {
             web_devicons = {
                 file = {
-                    enable = false,
+                    enable = true,
                     color = false,
                 },
                 folder = {
@@ -642,11 +643,9 @@ vim.keymap.set("t", "<leader>l", "<C-\\><C-N><C-w>l", { desc = "window: Focus ri
 vim.keymap.set("t", "<leader>j", "<C-\\><C-N><C-w>j", { desc = "window: Focus down" })
 vim.keymap.set("t", "<leader>k", "<C-\\><C-N><C-w>k", { desc = "window: Focus up" })
 
--- Atalhos para redimensionar a janela verticalmente
 vim.api.nvim_set_keymap('n', '<C-h>', ':vertical resize -2<CR>', { desc = "", noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-l>', ':vertical resize +2<CR>', { desc = "", noremap = true, silent = true })
 
--- Atalhos para redimensionar a janela horizontalmente
 vim.api.nvim_set_keymap('n', '<C-k>', ':resize -2<CR>', { desc = "", noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-j>', ':resize +2<CR>', { desc = "", noremap = true, silent = true })
 
@@ -671,57 +670,7 @@ vim.keymap.set("n", "<leader>q", "<cmd>qa<cr>", { desc = '[space|q] quit from al
 vim.keymap.set("n", "<leader>gf", "<cmd>GoTestFunc<cr>", { desc = '[space|gf] executable test go all test functions' })
 vim.keymap.set("n", "<leader>gt", "<cmd>GoTestFile<cr>", { desc = '[space|gt] executable test go all file' })
 
-require('go').setup({
-    -- notify: use nvim-notify
-    notify = true,
-    -- auto commands
-    auto_format = true,
-    auto_lint = true,
-    -- linters: revive, errcheck, staticcheck, golangci-lint
-    linter = 'errcheck',
-    -- linter_flags: e.g., {revive = {'-config', '/path/to/config.yml'}}
-    linter_flags = {},
-    -- lint_prompt_style: qf (quickfix), vt (virtual text)
-    lint_prompt_style = 'vt',
-    -- formatter: goimports, gofmt, gofumpt, lsp
-    formatter = 'goimports',
-    maintain_cursor_pos = false,
-    test_flags = {'-v'},
-    test_timeout = '30s',
-    test_env = {},
-    test_popup = true,
-    test_popup_auto_leave = false,
-    test_popup_width = 80,
-    test_popup_height = 10,
-    test_open_cmd = 'edit',
-    tags_name = 'json',
-    tags_options = {'json=omitempty'},
-    tags_transform = 'snakecase',
-    tags_flags = {'-skip-unexported'},
-    quick_type_flags = {'--just-types'},
-})
-
--- The setup config table shows all available config options with their default values:
-require("neocord").setup({
-    logo                = "auto",
-    logo_tooltip        = nil,
-    main_image          = "language",
-    client_id           = "1157438221865717891",
-    log_level           = nil,
-    debounce_timeout    = 10,
-    blacklist           = {},
-    file_assets         = {},
-    show_time           = true,
-    global_timer        = true,
-    editing_text        = "Editing %s",
-    file_explorer_text  = "Browsing %s",
-    git_commit_text     = "Committing changes",
-    plugin_manager_text = "Managing plugins",
-    reading_text        = "Reading %s",
-    workspace_text      = "Working on %s",
-    line_number_text    = "Line %s out of %s",
-    terminal_text       = "Using Terminal",
-})
+require('modules')
 
 vim.o.laststatus = 0
 
