@@ -237,17 +237,6 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
--- [[ Highlight on yank ]]
--- See `:help vim.highlight.on_yank()`
-local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
-vim.api.nvim_create_autocmd('TextYankPost', {
-    callback = function()
-        vim.highlight.on_yank()
-    end,
-    group = highlight_group,
-    pattern = '*',
-})
-
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup{
@@ -267,7 +256,7 @@ require('telescope').setup{
         initial_mode = "insert",
         selection_strategy = "reset",
         sorting_strategy = "descending",
-        layout_strategy = "horizontal",
+        layout_strategy = "vertical",
         layout_config = {
             horizontal = {
                 mirror = false,
@@ -283,6 +272,7 @@ require('telescope').setup{
         winblend = 0,
         border = {},
         borderchars = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
+        -- borderchars = { '', '', '', '', '', '', '', '' },
         color_devicons = true,
         use_less = true,
         set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
