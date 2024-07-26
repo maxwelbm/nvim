@@ -12,6 +12,8 @@ vim.o.wrap = false
 vim.o.cursorline = true
 -- vim.api.nvim_command('set colorcolumn=120')
 
+vim.o.splitright = true
+
 -- Install package manager
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
@@ -654,10 +656,12 @@ require('nvim_comment').setup({
     comment_empty = true,                 -- should comment out empty or whitespace only lines
     comment_empty_trim_whitespace = true, -- trim empty comment whitespace
     create_mappings = true,               -- Should key mappings be created
-    line_mapping = "cl",                  -- Normal mode mapping left hand side
+	line_mapping = "cl",                  -- Normal mode mapping left hand side
     operator_mapping = "c",               -- Visual/Operator mapping left hand side
     hook = nil                            -- Hook function to call before commenting takes place
 })
+
+
 
 require("ibl").setup {
     -- indent = { char = '┊' },
@@ -670,7 +674,6 @@ vim.keymap.set("n", "<leader>q", "<cmd>qa<cr>", { desc = '[space|q] quit from al
 vim.keymap.set("n", "<leader>gf", "<cmd>GoTestFunc<cr>", { desc = '[space|gf] executable test go all test functions' })
 vim.keymap.set("n", "<leader>gt", "<cmd>GoTestFile<cr>", { desc = '[space|gt] executable test go all file' })
 
-require('modules')
-
 vim.o.laststatus = 0
 
+require('modules')

@@ -56,17 +56,14 @@ local function do_test(prefix, cmd)
     if not valid_buf() then
         return
     end
-    -- calc popup window size here
-    local pos = output.calc_popup_size()
     local function on_event(_, data, event)
         if config.options.test_popup and not util.empty_output(data) then
             vim.api.nvim_exec_autocmds(
                 'User',
                 { pattern = 'NvimGoTestPopupPre' }
             )
-            output.popup_job_result(data, {
+            output.vsplit_job_result(data, {
                 title = prefix,
-                pos = pos,
                 filetype = 'nvimgo-test-popup',
             })
             vim.api.nvim_exec_autocmds(
