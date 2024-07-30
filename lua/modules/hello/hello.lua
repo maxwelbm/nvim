@@ -39,7 +39,7 @@ local function show_hello()
 	-- Texto ASCII art ou banner
 	local lines = {
 		"                                                  88                                                 ",
-		"                                                  88                                                 ",
+		"                                    88            88                                                 ",
 		"  ,adPPYba,  ,      .               .             88                ,adPPYba,                        ",
 		" a8      88 a8      8a  8b,dPPYba,  8a    ,adPPYb,88   ,adPPYba,   a8      88   ,adPPYba,            ",
 		" 88      88 88      88  88P'   \"Y8  88   a8\"    `Y88  a8P     88a  88      88  a8P     88a         ",
@@ -47,7 +47,7 @@ local function show_hello()
 		" \"8b,   ,aa \"8b    ,aa  88          88   \"8a,   ,d88  \"8b,   ,d8`  \"8b,   ,aa  \"8b,   ,d8`     ",
 		"  `\"Ybbd888  `\"Ybbd8\"'  88          88    `\"8bbdP\"Y8   `\"Ybbd8\"'    `\"Ybbd888   `\"Ybbd8\"'  ",
 		"         88                                                                88                        ",
-		" 		 88                                                        		   88                        ",
+		" 		   88                                                        		 88                       ",
 		"  `\"Ybbd8\"'                                                         `\"Ybbd8\"'                    ",
 		"",
 		"",

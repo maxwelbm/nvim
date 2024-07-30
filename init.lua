@@ -32,9 +32,9 @@ require('lazy').setup({
     -- NOTE: First, some plugins that don't require any configuration
 
     -- Git related plugins
-    -- 'tpope/vim-fugitive',
-    -- 'tpope/vim-rhubarb',
-    --
+    'tpope/vim-fugitive',
+    'tpope/vim-rhubarb',
+
     -- -- Detect tabstop and shiftwidth automatically
     -- 'tpope/vim-sleuth',
 
@@ -551,17 +551,17 @@ require("nvim-tree").setup({
     sync_root_with_cwd = true,
     update_focused_file = {
         enable = true,
-        update_root = false,
+        update_root = true,
     },
     view = {
         adaptive_size = true,
         side = "left",
-        -- width = 30,
+        width = 30,
         preserve_window_proportions = false,
         cursorline = true,
     },
     git = {
-        enable = false,
+        enable = true,
         ignore = true,
     },
     filesystem_watchers = {
@@ -574,20 +574,20 @@ require("nvim-tree").setup({
     },
     renderer = {
         root_folder_label = false,
-        highlight_git = false,
+        highlight_git = true,
         highlight_opened_files = "none",
         indent_markers = {
-            enable = false,
+            enable = true,
         },
         icons = {
             web_devicons = {
                 file = {
                     enable = true,
-                    color = false,
+                    color = true,
                 },
                 folder = {
-                    enable = false,
-                    color = false,
+                    enable = true,
+                    color = true,
                 },
             },
             show = {
@@ -606,8 +606,8 @@ require("nvim-tree").setup({
                     open = "",
                     symlink = "",
                     symlink_open = "",
-                    arrow_open = "",
-                    arrow_closed = "",
+                    -- arrow_open = "",
+                    -- arrow_closed = "",
                     -- arrow_open = "",
                     -- arrow_closed = "",
                 },
