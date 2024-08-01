@@ -577,7 +577,7 @@ require("nvim-tree").setup({
         highlight_git = true,
         highlight_opened_files = "none",
         indent_markers = {
-            enable = true,
+            enable = false,
         },
         icons = {
             web_devicons = {
@@ -591,27 +591,27 @@ require("nvim-tree").setup({
                 },
             },
             show = {
-                file = true,
-                folder = true,
-                folder_arrow = true,
+                file = false,
+                folder = false,
+                folder_arrow = false,
                 git = true,
             },
-            glyphs = {
-                default = "󰅩",
-                symlink = "",
-                folder = {
-                    default = "",
-                    empty = "",
-                    empty_open = "",
-                    open = "",
-                    symlink = "",
-                    symlink_open = "",
-                    -- arrow_open = "",
-                    -- arrow_closed = "",
-                    -- arrow_open = "",
-                    -- arrow_closed = "",
-                },
-                git = {
+			glyphs = {
+				--     default = "󰅩",
+				--     symlink = "",
+				--     folder = {
+				--         default = "",
+				--         empty = "",
+				--         empty_open = "",
+				--         open = "",
+				--         symlink = "",
+				--         symlink_open = "",
+				--         -- arrow_open = "",
+				--         -- arrow_closed = "",
+				--         -- arrow_open = "",
+				--         -- arrow_closed = "",
+				--     },
+				git = {
                     unstaged = "✗",
                     staged = "✓",
                     unmerged = "",
@@ -662,6 +662,6 @@ vim.keymap.set("n", "<leader>q", "<cmd>qa<cr>", { desc = '[space|q] quit from al
 vim.keymap.set("n", "<leader>gf", "<cmd>GoTestFunc<cr>", { desc = '[space|gf] executable test go all test functions' })
 vim.keymap.set("n", "<leader>gt", "<cmd>GoTestFile<cr>", { desc = '[space|gt] executable test go all file' })
 
-vim.o.laststatus = 0
+-- vim.o.laststatus = 3
 
 require('modules')

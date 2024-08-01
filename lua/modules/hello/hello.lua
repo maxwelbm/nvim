@@ -1,6 +1,3 @@
---
---
---                                         
 --                                                  88                                       
 --                                                  88                                      
 --  ,adPPYba,  ,      .               .             88                ,adPPYba,              
@@ -12,7 +9,6 @@
 --         88                                                                88               
 -- 		   88                                                        		 88              
 --  `"Ybbd8"'                                                         `"Ybbd8"'               
--- 
 -- 
 --                                                
 --                                            88  
@@ -47,25 +43,8 @@ local function show_hello()
 		" \"8b,   ,aa \"8b    ,aa  88          88   \"8a,   ,d88  \"8b,   ,d8`  \"8b,   ,aa  \"8b,   ,d8`     ",
 		"  `\"Ybbd888  `\"Ybbd8\"'  88          88    `\"8bbdP\"Y8   `\"Ybbd8\"'    `\"Ybbd888   `\"Ybbd8\"'  ",
 		"         88                                                                88                        ",
-		" 		   88                                                        		 88                       ",
+		" 		 88                                                        	       88                         ",
 		"  `\"Ybbd8\"'                                                         `\"Ybbd8\"'                    ",
-		"",
-		"",
-		"								ASCII Character Codes:",
-		"								",
-		"								",
-		"								n = ASCII 110",
-		"								e = ASCII 101",
-		"								r = ASCII 114",
-		"								d = ASCII 100",
-		"								",
-		"								Capitalised:",
-		"								",
-		"								",
-		"								N = ASCII 78",
-		"								E = ASCII 69",
-		"								R = ASCII 82",
-		"								D = ASCII 68",
 	}
 
 	-- Obtém o tamanho da janela
