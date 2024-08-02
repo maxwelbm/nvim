@@ -652,8 +652,8 @@ require('nvim_comment').setup({
 })
 
 require("ibl").setup {
-    -- indent = { char = '┊' },
-    indent = { char = '⎪' },
+    indent = { char = '│' },
+
 }
 
 vim.keymap.set("n", "<leader>df", "<cmd>vertical Git diff %<cr>", { desc = '[space|df] opens a git diff vertically' })
@@ -661,7 +661,5 @@ vim.keymap.set("n", "<leader>q", "<cmd>qa<cr>", { desc = '[space|q] quit from al
 
 vim.keymap.set("n", "<leader>gf", "<cmd>GoTestFunc<cr>", { desc = '[space|gf] executable test go all test functions' })
 vim.keymap.set("n", "<leader>gt", "<cmd>GoTestFile<cr>", { desc = '[space|gt] executable test go all file' })
-
--- vim.o.laststatus = 3
 
 require('modules')
