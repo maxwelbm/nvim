@@ -17,7 +17,7 @@ function statusline()
 	local filename = vim.fn.expand('%:t') -- filename current 
 	local extension = vim.fn.fnamemodify(filename, ':e')
 	if extension == '' then
-		extension = 'Indefinido'
+		extension = ''
 	else
 		-- Capitalize the first letter of the exestension 
 		extension = extension:sub(1,1):upper() .. extension:sub(2):lower()
