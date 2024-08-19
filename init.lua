@@ -707,6 +707,7 @@ vim.keymap.set("n", "<leader>gt", "<cmd>GoTestFile<cr>", { desc = '[space|gt] ex
 require("modules.go")
 require("modules.theme")
 require("modules.statusline")
+require("modules.userfake")
 -- require("modules.settings")
 --
 vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#2e3440', blend = 10 })  -- Altere a cor de fundo e o blend conforme preferir
