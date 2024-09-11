@@ -26,10 +26,13 @@ vim.o.splitright = true
 vim.o.hlsearch = false
 
 -- Define o marcador na coluna 100
--- vim.wo.colorcolumn = '100'
+-- vim.wo.colorcolumn = '80'
 -- vim.opt.colorcolumn = "80,100"
 -- Personalize a cor da coluna do marcador
 -- vim.api.nvim_set_hl(0, 'ColorColumn', { bg = '#2e3440', blend = 10 })
+
+vim.wo.colorcolumn = '80'
+
 
 -- OR
 
@@ -81,9 +84,16 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
--- tabs
-vim.o.tabstop = 4
-vim.o.shiftwidth = 4
+vim.o.tabstop = 4      -- Cada caractere de tabulação será equivalente a 4 espaços
+vim.o.shiftwidth = 4   -- O número de espaços para indentação será 4
+vim.o.expandtab = true -- Sempre substituir tabs por espaços
+-- vim.o.autoindent = true -- Mantém a indentação da linha anterior
+-- vim.o.smartindent = true -- Habilita indentação inteligente baseado na sintaxe do código
+
+-- vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+--   pattern = "*",
+--   command = "retab! 4",
+-- })
 
 -- Install package manager
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -240,6 +250,7 @@ require('lazy').setup({
     --     end,
     -- },
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+    { 'navarasu/onedark.nvim' },
     { 'nvim-tree/nvim-tree.lua' },
     { 'nvim-tree/nvim-web-devicons' },
     -- { 'maxwelbm/nvim-go' },
@@ -580,93 +591,6 @@ cmp.setup {
     },
 }
 
-require("nvim-tree").setup({
-    filters = {
-        dotfiles = false,
-        exclude = { vim.fn.stdpath "config" .. "/lua/custom" },
-    },
-    disable_netrw = true,
-    hijack_netrw = true,
-    hijack_cursor = true,
-    hijack_unnamed_buffer_when_opening = false,
-    sync_root_with_cwd = true,
-    update_focused_file = {
-        enable = true,
-        update_root = true,
-    },
-    view = {
-        adaptive_size = true,
-        side = "left",
-        width = 30,
-        preserve_window_proportions = false,
-        cursorline = true,
-    },
-    git = {
-        enable = true,
-        ignore = true,
-    },
-    filesystem_watchers = {
-        enable = true,
-    },
-    actions = {
-        open_file = {
-            resize_window = true,
-        },
-    },
-    renderer = {
-        root_folder_label = false,
-        highlight_git = true,
-        highlight_opened_files = "none",
-        indent_markers = {
-            enable = false,
-        },
-        icons = {
-            web_devicons = {
-                file = {
-                    enable = true,
-                    color = true,
-                },
-                folder = {
-                    enable = true,
-                    color = true,
-                },
-            },
-            show = {
-                file = false,
-                folder = false,
-                folder_arrow = false,
-                git = true,
-            },
-			glyphs = {
-				--     default = "󰅩",
-				--     symlink = "",
-				--     folder = {
-				--         default = "",
-				--         empty = "",
-				--         empty_open = "",
-				--         open = "",
-				--         symlink = "",
-				--         symlink_open = "",
-				--         -- arrow_open = "",
-				--         -- arrow_closed = "",
-				--         -- arrow_open = "",
-				--         -- arrow_closed = "",
-				--     },
-				git = {
-                    unstaged = "✗",
-                    staged = "✓",
-                    unmerged = "",
-                    renamed = "➜",
-                    untracked = "★",
-                    deleted = "",
-                    ignored = "◌",
-                },
-            },
-        },
-    },
-})
-
-vim.keymap.set('n', '<leader>n', '<cmd>NvimTreeToggle<cr>', { desc = '[space|n] open explorer file menu' })
 vim.keymap.set("n", "<leader>h", "<c-w>h", { desc = "window: Focus left" })
 vim.keymap.set("n", "<leader>l", "<c-w>l", { desc = "window: Focus right" })
 vim.keymap.set("n", "<leader>j", "<c-w>j", { desc = "window: Focus down" })
@@ -687,7 +611,7 @@ require('nvim_comment').setup({
     comment_empty = true,                 -- should comment out empty or whitespace only lines
     comment_empty_trim_whitespace = true, -- trim empty comment whitespace
     create_mappings = true,               -- Should key mappings be created
-	line_mapping = "cl",                  -- Normal mode mapping left hand side
+    line_mapping = "cl",                  -- Normal mode mapping left hand side
     operator_mapping = "c",               -- Visual/Operator mapping left hand side
     hook = nil                            -- Hook function to call before commenting takes place
 })
@@ -708,6 +632,9 @@ require("modules.go")
 require("modules.theme")
 require("modules.statusline")
 require("modules.userfake")
+require("modules.nvim-tree")
+require("modules.dlv")
 -- require("modules.settings")
---
-vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#2e3440', blend = 10 })  -- Altere a cor de fundo e o blend conforme preferir
+
+vim.api.nvim_set_hl(0, 'ColorColumn', { bg = '#282c34', blend = 10 })
+vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#282c34', blend = 10 })  -- Altere a cor de fundo e o blend conforme preferir
