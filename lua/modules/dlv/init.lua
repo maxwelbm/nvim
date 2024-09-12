@@ -50,7 +50,16 @@ vim.api.nvim_create_user_command(
   { nargs = '*', bang = true }
 )
 
+vim.api.nvim_create_user_command(
+  'GoDebugTestName',
+  function()
+    require("modules.dlv.dlv").debugtestname()
+  end,
+  { nargs = '*', bang = true }
+)
+
 vim.keymap.set("n", "<leader>gbp", "<cmd>GoToggleBreakpoint<cr>", { desc = '[space|gbp] pin breakpoint in current line' })
 vim.keymap.set("n", "<leader>gdg", "<cmd>GoDebug<cr>", { desc = '[space|gdg] exec delve mode debug to main.go' })
 vim.keymap.set("n", "<leader>gde", "<cmd>GoDebugExec<cr>", { desc = '[space|gde] execute delve in exec mode passing arguments to inform for binary' })
 vim.keymap.set("n", "<leader>gdt", "<cmd>GoDebugTest<cr>", { desc = '[space|gdt] execute delve in test mode'  })
+vim.keymap.set("n", "<leader>gdn", "<cmd>GoDebugTestName<cr>", { desc = '[space|gdn]  starts debugging a specific Go test by the name of the test function'  })

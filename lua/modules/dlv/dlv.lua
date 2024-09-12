@@ -149,4 +149,53 @@ function godebug.debugtest(bang, ...)
   vim.fn.feedkeys("i cd " .. file_dir .. " && ".. command_str .. "; exit\n")
 end
 
+local function split_file_name(str)
+    return vim.fn.split(vim.fn.split(str, ' ')[2], '(')[1]
+end
+
+local function replace_spaces_with_underscore(str)
+    return str:gsub('%s', '_')
+end
+
+local function process_line_test_name()
+    local line = vim.api.nvim_get_current_line()
+    local start_idx, end_idx = string.find(line, '%b""')
+
+    if start_idx and end_idx then
+        local value_inside_parentheses = line:sub(start_idx + 1, end_idx - 1)
+        return replace_spaces_with_underscore(value_inside_parentheses)
+    end
+end
+
+function godebug.debugtestname()
+  -- Chama a função para escrever os breakpoints no arquivo
+  godebug.writeBreakpointsFile()
+
+  -- Constrói o comando para o terminal
+  local breakpoints_file = vim.g.godebug_breakpoints_file
+  local command = { "dlv", "test", "--init=" .. breakpoints_file }
+
+  local func_name = ''
+  local line = vim.fn.search([[func \(Test\|Example\)]], 'bcnW')
+  if line == 0 then
+    print(string.format('Test func not found: %s', func_name))
+    return
+  end
+
+  local cur_line = vim.fn.getline(line)
+  func_name = split_file_name(cur_line)
+
+  local name_test = process_line_test_name()
+
+  -- Converte a tabela de comandos em uma string
+  local command_str = table.concat(command, " ")
+  command_str = string.format('%s -- -test.run ^%s/%s$', command_str, func_name, name_test)
+
+  local file_dir = vim.fn.expand('%:p:h')  -- Pega o diretório do arquivo atual
+
+  vim.cmd('vsp')  -- Abre um terminal vertical
+  vim.cmd('terminal')  -- Abre o terminal
+  vim.fn.feedkeys("i cd " .. file_dir .. " && ".. command_str .. "; exit\n")
+end
+
 return godebug
