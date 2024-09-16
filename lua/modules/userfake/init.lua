@@ -65,4 +65,3 @@ vim.keymap.set("n", "<leader>fk", simulate_typing_and_deleting, { desc = '[leade
 vim.keymap.set("n", "<leader>fp", pause, { desc = '[leader] + fp para pausar a simulação' })
 vim.keymap.set("n", "<leader>fr", resume, { desc = '[leader] + fr para retomar a simulação' })
 
-

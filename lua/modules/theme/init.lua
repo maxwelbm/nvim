@@ -2,7 +2,7 @@
 require('onedark').setup  {
     -- Main options --
     style = 'dark', -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
-    transparent = true,  -- Show/hide background
+    transparent = false,  -- Show/hide background
     term_colors = true, -- Change terminal color as per the selected theme style
     ending_tildes = false, -- Show the end-of-buffer tildes. By default they are hidden
     cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
@@ -42,8 +42,8 @@ require('onedark').setup  {
 vim.cmd.colorscheme "onedark"
 
 -- Configure a status line como transparente
-vim.api.nvim_set_hl(0, 'StatusLine', { bg = 'NONE', fg = '#848b98' }) -- Ajuste a cor de fg conforme o gosto
-vim.api.nvim_set_hl(0, 'StatusLineNC', { bg = 'NONE', fg = '#5c6370' }) -- Linha de status de janelas inativas
+-- vim.api.nvim_set_hl(0, 'StatusLine', { bg = 'NONE', fg = '#848b98' }) -- Ajuste a cor de fg conforme o gosto
+-- vim.api.nvim_set_hl(0, 'StatusLineNC', { bg = 'NONE', fg = '#5c6370' }) -- Linha de status de janelas inativas
 
 -- require("catppuccin").setup({
 --     flavour = "frappe", -- latte, frappe, macchiato, mocha, auto
