@@ -34,7 +34,7 @@ function godebug.toggleBreakpoint(file, line, ...)
   --  Otherwise remove it from the list.
   local i = vim.fn.index(breakpoints, breakpoint)
   if i == -1 then
-     -- Adicionar o breakpoint à lista
+    -- Adicionar o breakpoint à lista
     table.insert(breakpoints, breakpoint)
     vim.g.godebug_breakpoints = breakpoints
 
@@ -150,21 +150,28 @@ function godebug.debugtest(bang, ...)
 end
 
 local function split_file_name(str)
-    return vim.fn.split(vim.fn.split(str, ' ')[2], '(')[1]
+  return vim.fn.split(vim.fn.split(str, ' ')[2], '(')[1]
 end
 
 local function replace_spaces_with_underscore(str)
-    return str:gsub('%s', '_')
+  return str:gsub('%s', '_')
 end
 
 local function process_line_test_name()
-    local line = vim.api.nvim_get_current_line()
-    local start_idx, end_idx = string.find(line, '%b""')
+  local line = vim.api.nvim_get_current_line()
 
-    if start_idx and end_idx then
-        local value_inside_parentheses = line:sub(start_idx + 1, end_idx - 1)
-        return replace_spaces_with_underscore(value_inside_parentheses)
-    end
+  -- Verifica se a linha é uma chamada t.Run()
+  local t_run_match = string.match(line, 't%.Run%s*%(%s*"%s*(.-)"%s*%)')
+  if t_run_match then
+    return replace_spaces_with_underscore(t_run_match)
+  end
+
+  -- Verifica se a linha é uma tabela de comandos
+  local start_idx, end_idx = string.find(line, '%b""')
+  if start_idx and end_idx then
+    local value_inside_parentheses = line:sub(start_idx + 1, end_idx - 1)
+    return replace_spaces_with_underscore(value_inside_parentheses)
+  end
 end
 
 function godebug.debugtestname()
@@ -189,7 +196,7 @@ function godebug.debugtestname()
 
   -- Converte a tabela de comandos em uma string
   local command_str = table.concat(command, " ")
-  command_str = string.format('%s -- -test.run ^%s/%s$', command_str, func_name, name_test)
+  command_str = string.format('%s -- -test.run \'^%s/%s$\'', command_str, func_name, name_test)
 
   local file_dir = vim.fn.expand('%:p:h')  -- Pega o diretório do arquivo atual
 
