@@ -634,9 +634,7 @@ require("modules.statusline")
 require("modules.userfake")
 require("modules.nvim-tree")
 require("modules.dlv")
-
-
-
+require("modules.genmock")
 
 -- if set, when we switch between buffers, it will not split more than once. It will switch to the existing buffer instead
 vim.opt.switchbuf = 'useopen'
