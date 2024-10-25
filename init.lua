@@ -45,7 +45,7 @@ vim.wo.wrap = true
 
 -- Make line numbers default
 vim.wo.number = true
-vim.wo.relativenumber = true
+vim.wo.relativenumber = false
 
 -- local columns = { 80, 120 } -- Coloque os números das colunas limit desejadas aqui
 -- -- Define as colunas de limit
@@ -89,6 +89,10 @@ vim.o.shiftwidth = 4   -- O número de espaços para indentação será 4
 vim.o.expandtab = true -- Sempre substituir tabs por espaços
 -- vim.o.autoindent = true -- Mantém a indentação da linha anterior
 -- vim.o.smartindent = true -- Habilita indentação inteligente baseado na sintaxe do código
+
+
+vim.o.ignorecase = false
+vim.o.smartcase = false
 
 -- vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
 --   pattern = "*",
@@ -249,8 +253,8 @@ require('lazy').setup({
     --     vim.cmd.colorscheme("doom-one")
     --     end,
     -- },
+    -- { 'navarasu/onedark.nvim' },
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-    { 'navarasu/onedark.nvim' },
     { 'nvim-tree/nvim-tree.lua' },
     { 'nvim-tree/nvim-web-devicons' },
     -- { 'maxwelbm/nvim-go' },
@@ -322,8 +326,11 @@ require('telescope').setup{
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
 
+
+
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+
 vim.keymap.set('n', '<leader>/', function()
     -- You can pass additional configuration to telescope to change theme, layout, etc.
     require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
@@ -646,6 +653,11 @@ goc.setup({ verticalSplit = false })  -- default to horizontal
 vim.keymap.set('n', '<Leader>gcf', goc.Coverage, {silent=true})       -- run for the whole File
 vim.keymap.set('n', '<Leader>gct', goc.CoverageFunc, {silent=true})   -- run only for a specific Test unit
 vim.keymap.set('n', '<Leader>gcc', goc.ClearCoverage, {silent=true})  -- clear coverage highlights
+
+
+vim.api.nvim_create_user_command('CoverageFile', function() goc.Coverage() end, {})
+vim.api.nvim_create_user_command('CoverageTest', function() goc.CoverageFunc() end, {})
+vim.api.nvim_create_user_command('CoverageClear', function() goc.ClearCoverage() end, {})
 
 -- If you need custom arguments, you can supply an array as in the example below.
 -- vim.keymap.set('n', '<Leader>gcf', function() goc.Coverage({ "-race", "-count=1" }) end, {silent=true})

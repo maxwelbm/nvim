@@ -96,7 +96,6 @@ function godebug.debug(bang, ...)
   vim.fn.feedkeys("i" .. command_str .. "; exit\n")
 end
 
-
 function godebug.debugexec(bang, ...)
   -- Chama a função para escrever os breakpoints no arquivo
   godebug.writeBreakpointsFile()
