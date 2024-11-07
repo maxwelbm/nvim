@@ -45,7 +45,7 @@ vim.wo.wrap = true
 
 -- Make line numbers default
 vim.wo.number = true
-vim.wo.relativenumber = false
+vim.wo.relativenumber = true 
 
 -- local columns = { 80, 120 } -- Coloque os números das colunas limit desejadas aqui
 -- -- Define as colunas de limit
@@ -341,9 +341,17 @@ vim.keymap.set('n', '<leader>/', function()
 end, { desc = '[/] Fuzzily search in current buffer' })
 
 vim.keymap.set('n', '<leader>gs', require('telescope.builtin').git_status, { desc = 'Search [G]it [S]status' })
-vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[S]search [F]files' })
+
+vim.keymap.set('n', '<leader>ff', function()
+    require('telescope.builtin').find_files({ hidden = true })
+end, { desc = '[S]search [F]files' })
+
 vim.keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, { desc = '[S]search current [W]word' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]search by [G]grep' })
+
+vim.keymap.set('n', '<leader>sg', function()
+    require('telescope.builtin').live_grep({ hidden = true })
+end, { desc = '[S]search by [G]grep' })
+
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]search [D]siagnostics' })
 vim.keymap.set('n', '<leader>e', "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<cr>", { desc = '[D]siagnostics' })
 
@@ -354,6 +362,18 @@ vim.diagnostic.config({
     update_in_insert = false,
     severity_sort = false,
 })
+
+-- Função para reiniciar o LSP e o autocompletar
+function RestartLSPAndAutocomplete()
+    for _, client in pairs(vim.lsp.get_active_clients()) do
+        vim.lsp.stop_client(client.id)
+    end
+    vim.cmd('LspStart')
+    require('cmp').setup {} -- Reinicializa o cmp (nvim-cmp)
+end
+
+-- Mapeia uma tecla de atalho para reiniciar o LSP e autocompletar
+vim.api.nvim_set_keymap('n', '<leader>rl', '<cmd>lua RestartLSPAndAutocomplete()<CR>', { noremap = true, silent = true })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -491,6 +511,31 @@ local on_attach = function(_, bufnr)
     end, { desc = 'Format current buffer with LSP' })
 end
 
+-- nvim-cmp supports additional completion capabilities, so broadcast that to servers
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
+-- Função para reiniciar automaticamente o LSP se ele quebrar
+local function restart_lsp_on_failure()
+    if #vim.lsp.get_active_clients() == 0 then
+        vim.defer_fn(function()
+            for _, client in ipairs(vim.lsp.get_active_clients()) do
+                vim.lsp.stop_client(client.id)
+                require('lspconfig')[client.name].setup{
+                    on_attach = on_attach,
+                    capabilities = capabilities,
+                }
+                vim.cmd("LspStart " .. client.name)
+            end
+        end, 100)
+    end
+end
+
+-- Configuração do AutoCmd para detectar e reiniciar o LSP automaticamente em caso de falha
+vim.api.nvim_create_autocmd({"BufEnter", "CursorHold"}, {
+    callback = restart_lsp_on_failure
+})
+
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
 --
@@ -518,13 +563,8 @@ local servers = {
 -- Setup neovim lua configuration
 require('neodev').setup()
 
--- nvim-cmp supports additional completion capabilities, so broadcast that to servers
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
-
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
-
 mason_lspconfig.setup {
     ensure_installed = vim.tbl_keys(servers),
 }
