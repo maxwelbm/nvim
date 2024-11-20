@@ -14,6 +14,9 @@ sudo apt-get install git neovim ripgrep gopls xclip
 
 # fedora
 sudo dnf install git neovim ripgrep gopls xclip
+
+# macos
+brew install git neovim ripgrep gopls xclip
 ```
 
 ### Install configs - Linux / Macos / Windows
