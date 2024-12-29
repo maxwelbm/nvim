@@ -13,7 +13,7 @@ local config = {
         update_root = false,
     },
     view = {
-        adaptive_size = false,
+        adaptive_size = true,
         side = "left",
         width = 30,
         preserve_window_proportions = false,

@@ -1,6 +1,6 @@
-vim.o.lazyredraw = true         -- Reduz o redrawing
-vim.o.synmaxcol = 240           -- Limita o máximo de colunas de sintaxe
-vim.o.timeoutlen = 500          -- Reduz o tempo de timeout
+vim.o.lazyredraw = false -- Reduz o redrawing
+-- vim.o.synmaxcol = 240           -- Limita o máximo de colunas de sintaxe
+-- vim.o.timeoutlen = 500          -- Reduz o tempo de timeout
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
@@ -37,15 +37,15 @@ vim.wo.colorcolumn = '80'
 -- OR
 
 -- Define a largura máxima para a quebra automática de linha
-vim.o.textwidth = 120
+-- vim.o.textwidth = 120
 
 -- Ativa o wrap para visualização de linhas longas
-vim.wo.wrap = true
+vim.wo.wrap = false
 
 
 -- Make line numbers default
 vim.wo.number = true
-vim.wo.relativenumber = true 
+vim.wo.relativenumber = true
 
 -- local columns = { 80, 120 } -- Coloque os números das colunas limit desejadas aqui
 -- -- Define as colunas de limit
@@ -255,7 +255,7 @@ require('lazy').setup({
     --     end,
     -- },
     -- { 'navarasu/onedark.nvim' },
-    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+    -- { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
     { 'nvim-tree/nvim-tree.lua' },
     { 'nvim-tree/nvim-web-devicons' },
     -- { 'maxwelbm/nvim-go' },
@@ -265,6 +265,10 @@ require('lazy').setup({
     --     event = "VeryLazy"
     -- },
     -- { 'rafaelsq/nvim-goc.lua' },
+    {
+        'IogaMaster/neocord',
+        event = "VeryLazy"
+    },
 }, {})
 
 -- [[ Basic Keymaps ]]
@@ -677,12 +681,23 @@ vim.keymap.set("n", "<leader>gt", "<cmd>GoTestFile<cr>", { desc = '[space|gt] ex
 -- require("modules.bootstrap")
 -- require("modules.hello.hello")
 require("modules.go")
-require("modules.theme")
+-- require("modules.theme")
 require("modules.statusline")
+require("modules.doom-one")
 require("modules.userfake")
 require("modules.nvim-tree")
 require("modules.dlv")
 require("modules.genmock")
+
+        -- vim.cmd("colorscheme doom-one")
+--
+--
+local config = require('modules.doom-one')
+config.set_colorscheme()
+
+-- print(config)
+--
+-- vim.cmd.colorscheme "doom-one"
 
 -- if set, when we switch between buffers, it will not split more than once. It will switch to the existing buffer instead
 vim.opt.switchbuf = 'useopen'
@@ -738,3 +753,30 @@ vim.keymap.set('n', '<Leader>gcb', function() cf(true) end, {silent=true})
 
 -- vim.api.nvim_set_hl(0, 'ColorColumn', { bg = '#282c34', blend = 10 })
 -- vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#282c34', blend = 10 })  -- Altere a cor de fundo e o blend conforme preferir
+
+-- The setup config table shows all available config options with their default values:
+require("neocord").setup({
+    -- General options
+    logo                = "auto",                     -- "auto" or url
+    logo_tooltip        = nil,                        -- nil or string
+    main_image          = "language",                 -- "language" or "logo"
+    client_id           = "1157438221865717891",      -- Use your own Discord application client id (not recommended)
+    log_level           = nil,                        -- Log messages at or above this level (one of the following: "debug", "info", "warn", "error")
+    debounce_timeout    = 10,                         -- Number of seconds to debounce events (or calls to `:lua package.loaded.presence:update(<filename>, true)`)
+    blacklist           = {},                         -- A list of strings or Lua patterns that disable Rich Presence if the current file name, path, or workspace matches
+    file_assets         = {},                         -- Custom file asset definitions keyed by file names and extensions (see default config at `lua/presence/file_assets.lua` for reference)
+    show_time           = true,                       -- Show the timer
+    global_timer        = false,                      -- if set true, timer won't update when any event are triggered
+
+    -- Rich Presence text options
+    editing_text        = "Editing %s",               -- Format string rendered when an editable file is loaded in the buffer (either string or function(filename: string): string)
+    file_explorer_text  = "Browsing %s",              -- Format string rendered when browsing a file explorer (either string or function(file_explorer_name: string): string)
+    git_commit_text     = "Committing changes",       -- Format string rendered when committing changes in git (either string or function(filename: string): string)
+    plugin_manager_text = "Managing plugins",         -- Format string rendered when managing plugins (either string or function(plugin_manager_name: string): string)
+    reading_text        = "Reading %s",               -- Format string rendered when a read-only or unmodifiable file is loaded in the buffer (either string or function(filename: string): string)
+    workspace_text      = "Working on %s",            -- Format string rendered when in a git repository (either string or function(project_name: string|nil, filename: string): string)
+    line_number_text    = "Line %s out of %s",        -- Format string rendered when `enable_line_number` is set to true (either string or function(line_number: number, line_count: number): string)
+    terminal_text       = "Using Terminal",           -- Format string rendered when in terminal mode.
+})
+
+vim.o.tabstop = 4      -- Cada caractere de tabulação será equivalente a 4 espaços

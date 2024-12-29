@@ -9,8 +9,8 @@
 local doom_one = {}
 
 local if_nil = vim.F.if_nil
-local utils = require("doom-one.utils")
-local colors = require("doom-one.colors")
+local utils = require('modules.doom-one.utils')
+local colors = require('modules.doom-one.colors')
 
 local config = {
 	ui = {
