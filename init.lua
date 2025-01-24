@@ -87,7 +87,7 @@ vim.o.termguicolors = true
 
 vim.o.tabstop = 4      -- Cada caractere de tabulação será equivalente a 4 espaços
 vim.o.shiftwidth = 4   -- O número de espaços para indentação será 4
-vim.o.expandtab = true -- Sempre substituir tabs por espaços
+vim.o.expandtab = false -- Garante que tabulações reais (\t) sejam usadas em vez de espaços
 -- vim.o.autoindent = true -- Mantém a indentação da linha anterior
 -- vim.o.smartindent = true -- Habilita indentação inteligente baseado na sintaxe do código
 
@@ -678,20 +678,15 @@ vim.keymap.set("n", "<leader>q", "<cmd>qa<cr>", { desc = '[space|q] quit from al
 vim.keymap.set("n", "<leader>gf", "<cmd>GoTestFunc<cr>", { desc = '[space|gf] executable test go all test functions' })
 vim.keymap.set("n", "<leader>gt", "<cmd>GoTestFile<cr>", { desc = '[space|gt] executable test go all file' })
 
--- require("modules.bootstrap")
--- require("modules.hello.hello")
 require("modules.go")
--- require("modules.theme")
 require("modules.statusline")
 require("modules.doom-one")
 require("modules.userfake")
 require("modules.nvim-tree")
 require("modules.dlv")
 require("modules.genmock")
+require("modules.gojson")
 
-        -- vim.cmd("colorscheme doom-one")
---
---
 local config = require('modules.doom-one')
 config.set_colorscheme()
 
