@@ -1,3 +1,9 @@
+-- vim.env.XDG_CONFIG_HOME = vim.fn.expand("~/Workspace/mynvim/config")
+-- vim.env.XDG_CACHE_HOME = vim.fn.expand("~/Workspace/mynvim/cache")
+-- vim.env.XDG_DATA_HOME = vim.fn.expand("~/Workspace/mynvim/share")
+-- vim.env.XDG_STATE_HOME = vim.fn.expand("~/Workspace/mynvim/state")
+vim.env.XDG_CACHE_HOME = "/home/nv_cache"
+
 vim.o.lazyredraw = false -- Reduz o redrawing
 -- vim.o.synmaxcol = 240           -- Limita o máximo de colunas de sintaxe
 -- vim.o.timeoutlen = 500          -- Reduz o tempo de timeout
@@ -246,14 +252,14 @@ require('lazy').setup({
         build = ':TSUpdate',
     },
     { 'terrortylor/nvim-comment' },
-    -- { "NTBBloodbath/doom-one.nvim",
-    --     setup = function()
-    --         vim.g.doom_one_transparent_background = true -- TODO: enable transparent not work
-    --     end,
-    --     config = function()
-    --     vim.cmd.colorscheme("doom-one")
-    --     end,
-    -- },
+    { "NTBBloodbath/doom-one.nvim",
+        setup = function()
+            vim.g.doom_one_transparent_background = false-- TODO: enable transparent not work
+        end,
+        config = function()
+        vim.cmd.colorscheme("doom-one")
+        end,
+    },
     -- { 'navarasu/onedark.nvim' },
     -- { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
     { 'nvim-tree/nvim-tree.lua' },
@@ -269,6 +275,7 @@ require('lazy').setup({
         'IogaMaster/neocord',
         event = "VeryLazy"
     },
+    "mfussenegger/nvim-lint",
 }, {})
 
 -- [[ Basic Keymaps ]]
@@ -519,27 +526,6 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
--- Função para reiniciar automaticamente o LSP se ele quebrar
-local function restart_lsp_on_failure()
-    if #vim.lsp.get_active_clients() == 0 then
-        vim.defer_fn(function()
-            for _, client in ipairs(vim.lsp.get_active_clients()) do
-                vim.lsp.stop_client(client.id)
-                require('lspconfig')[client.name].setup{
-                    on_attach = on_attach,
-                    capabilities = capabilities,
-                }
-                vim.cmd("LspStart " .. client.name)
-            end
-        end, 100)
-    end
-end
-
--- Configuração do AutoCmd para detectar e reiniciar o LSP automaticamente em caso de falha
-vim.api.nvim_create_autocmd({"BufEnter", "CursorHold"}, {
-    callback = restart_lsp_on_failure
-})
-
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
 --
@@ -680,7 +666,7 @@ vim.keymap.set("n", "<leader>gt", "<cmd>GoTestFile<cr>", { desc = '[space|gt] ex
 
 require("modules.go")
 require("modules.statusline")
-require("modules.doom-one")
+-- require("modules.doom-one")
 require("modules.userfake")
 require("modules.nvim-tree")
 require("modules.dlv")
@@ -773,5 +759,17 @@ require("neocord").setup({
     line_number_text    = "Line %s out of %s",        -- Format string rendered when `enable_line_number` is set to true (either string or function(line_number: number, line_count: number): string)
     terminal_text       = "Using Terminal",           -- Format string rendered when in terminal mode.
 })
+
+
+require'lspconfig'.golangci_lint_ls.setup{
+  cmd = { "golangci-lint-langserver" },
+  filetypes = { "go" },
+  root_dir = require'lspconfig'.util.root_pattern(".golangci.yml", "go.mod", ".git"),
+  settings = {
+    golangci_lint = {
+      command = { "golangci-lint", "run", "--out-format", "json" },
+    },
+  },
+}
 
 vim.o.tabstop = 4      -- Cada caractere de tabulação será equivalente a 4 espaços

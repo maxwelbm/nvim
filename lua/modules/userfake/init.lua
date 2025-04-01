@@ -60,8 +60,8 @@ local function resume()
     end
 end
 
+
 -- Crie os atalhos para executar, pausar e retomar a simulação
 vim.keymap.set("n", "<leader>fk", simulate_typing_and_deleting, { desc = '[leader] + fk para simular digitação de função' })
 vim.keymap.set("n", "<leader>fp", pause, { desc = '[leader] + fp para pausar a simulação' })
 vim.keymap.set("n", "<leader>fr", resume, { desc = '[leader] + fr para retomar a simulação' })
-

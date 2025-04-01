@@ -75,18 +75,15 @@ function godebug.deleteBreakpointsFile(...)
 end
 
 function godebug.debug(bang, ...)
-  -- Chama a função para escrever os breakpoints no arquivo
   godebug.writeBreakpointsFile()
 
-  -- Constrói o comando para o terminal
   local breakpoints_file = vim.g.godebug_breakpoints_file
   local command = { "dlv", "debug", "--init=" .. breakpoints_file }
 
-  -- Adiciona argumentos extras, se houver
-  local args = { ... }
-  for _, arg in ipairs(args) do
-    table.insert(command, arg)
-  end
+  -- local args = { ... }
+  -- for _, arg in ipairs(args) do
+  --   table.insert(command, arg)
+  -- end
 
   -- Converte a tabela de comandos em uma string
   local command_str = table.concat(command, " ")
@@ -96,20 +93,17 @@ function godebug.debug(bang, ...)
   vim.fn.feedkeys("i" .. command_str .. "; exit\n")
 end
 
+-- apontar para o binario
 function godebug.debugexec(bang, ...)
-  -- Chama a função para escrever os breakpoints no arquivo
   godebug.writeBreakpointsFile()
 
-  -- Constrói o comando para o terminal
   local breakpoints_file = vim.g.godebug_breakpoints_file
   local command = { "dlv", "exec", "--init=" .. breakpoints_file, "--" }
 
-  -- Adiciona argumentos extras, se houver
   local args = { ... }
-  -- Verifica se há argumentos
   if #args == 0 then
-    print("Erro: Nenhum argumento foi passado. Você precisa fornecer o path do binario que deseja executar")
-    return  -- Interrompe a execução do código se não houver argumentos
+    print("Nenhum binario foi passado por argumento. Você precisa fornecer o path do binario que deseja executar")
+    return
   end
 
   for _, arg in ipairs(args) do
