@@ -2,21 +2,21 @@
 My Config Neovim
 
 ### Dependences
-  - ripgrep, gopls, xclip
+  - ripgrep, gopls, xclip, nodejs, npm
 
 ### Install dependences:
 ```sh
 # archlinux
-sudo pacman -S git neovim ripgrep gopls xclip
+sudo pacman -S git neovim ripgrep gopls xclip nodejs npm
 
 # ubuntu
-sudo apt-get install git neovim ripgrep gopls xclip
+sudo apt-get install git neovim ripgrep gopls xclip nodejs npm
 
 # fedora
-sudo dnf install git neovim ripgrep gopls xclip
+sudo dnf install git neovim ripgrep gopls xclip nodejs npm
 
 # macos
-brew install git neovim ripgrep gopls xclip
+brew install git neovim ripgrep gopls xclip nodejs npm
 ```
 
 ### Install configs - Linux / Macos / Windows
