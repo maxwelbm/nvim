@@ -1,15 +1,5 @@
--- vim.env.XDG_CONFIG_HOME = vim.fn.expand("~/Workspace/mynvim/config")
--- vim.env.XDG_CACHE_HOME = vim.fn.expand("~/Workspace/mynvim/cache")
--- vim.env.XDG_DATA_HOME = vim.fn.expand("~/Workspace/mynvim/share")
--- vim.env.XDG_STATE_HOME = vim.fn.expand("~/Workspace/mynvim/state")
-vim.env.XDG_CACHE_HOME = "/home/nv_cache"
-
 vim.o.lazyredraw = false -- Reduz o redrawing
--- vim.o.synmaxcol = 240           -- Limita o máximo de colunas de sintaxe
--- vim.o.timeoutlen = 500          -- Reduz o tempo de timeout
 
--- Set <space> as the leader key
--- See `:help mapleader`
 -- NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -24,26 +14,11 @@ vim.wo.cursorlineopt = 'screenline'
 
 vim.o.splitright = true
 
--- [[ Setting options ]]
--- See `:help vim.o`
--- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
 vim.o.hlsearch = false
 
--- Define o marcador na coluna 100
 -- vim.wo.colorcolumn = '80'
--- vim.opt.colorcolumn = "80,100"
--- Personalize a cor da coluna do marcador
--- vim.api.nvim_set_hl(0, 'ColorColumn', { bg = '#2e3440', blend = 10 })
-
-vim.wo.colorcolumn = '80'
-
-
--- OR
-
--- Define a largura máxima para a quebra automática de linha
--- vim.o.textwidth = 120
 
 -- Ativa o wrap para visualização de linhas longas
 vim.wo.wrap = false
@@ -53,19 +28,10 @@ vim.wo.wrap = false
 vim.wo.number = true
 vim.wo.relativenumber = true
 
--- local columns = { 80, 120 } -- Coloque os números das colunas limit desejadas aqui
--- -- Define as colunas de limit
--- vim.wo.colorcolumn = table.concat(columns, ',')
--- vim.opt.colorcolumn = "80,100"
--- vim.opt.colorcolumn = "80"
-
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
 -- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
--- vim.o.clipboard = 'unnamedplus'
 vim.opt.clipboard = "unnamedplus"
 
 -- Enable break indent
@@ -97,14 +63,10 @@ vim.o.expandtab = false -- Garante que tabulações reais (\t) sejam usadas em v
 -- vim.o.autoindent = true -- Mantém a indentação da linha anterior
 -- vim.o.smartindent = true -- Habilita indentação inteligente baseado na sintaxe do código
 
-
 vim.o.ignorecase = false
 vim.o.smartcase = false
 
--- vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
---   pattern = "*",
---   command = "retab! 4",
--- })
+vim.o.tabstop = 4 -- Cada caractere de tabulação será equivalente a 4 espaços
 
 -- Install package manager
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -121,8 +83,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
-    -- NOTE: First, some plugins that don't require any configuration
-
     -- Git related plugins
     'tpope/vim-fugitive',
     'tpope/vim-rhubarb',
@@ -260,23 +220,14 @@ require('lazy').setup({
         vim.cmd.colorscheme("doom-one")
         end,
     },
-    -- { 'navarasu/onedark.nvim' },
-    -- { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
     { 'nvim-tree/nvim-tree.lua' },
     { 'nvim-tree/nvim-web-devicons' },
-    -- { 'maxwelbm/nvim-go' },
-    -- { 'andweeb/presence.nvim' },
-    -- {
-    --     'IogaMaster/neocord',
-    --     event = "VeryLazy"
-    -- },
-    -- { 'rafaelsq/nvim-goc.lua' },
     {
         'IogaMaster/neocord',
         event = "VeryLazy"
     },
     "mfussenegger/nvim-lint",
-}, {})
+})
 
 -- [[ Basic Keymaps ]]
 
@@ -338,8 +289,6 @@ require('telescope').setup{
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
 
-
-
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 
@@ -376,7 +325,7 @@ vim.diagnostic.config({
 
 -- Função para reiniciar o LSP e o autocompletar
 function RestartLSPAndAutocomplete()
-    for _, client in pairs(vim.lsp.get_active_clients()) do
+    for _, client in pairs(vim.lsp.get_clients()) do
         vim.lsp.stop_client(client.id)
     end
     vim.cmd('LspStart')
@@ -484,15 +433,12 @@ local on_attach = function(_, bufnr)
         vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
     end
 
-    vim.lsp.with(
-        vim.lsp.diagnostic.on_publish_diagnostics,
-        {
-            virtual_text = false,
-            signs = true,
-            update_in_insert = false,
-            underline = true,
-        }
-    )
+    vim.diagnostic.config({
+        virtual_text = false,
+        signs = true,
+        update_in_insert = false,
+        underline = true,
+    })
 
     nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
     nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
@@ -535,12 +481,21 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
-    -- clangd = {},
-    -- gopls = {},
-    -- pyright = {},
-    -- rust_analyzer = {},
-    -- tsserver = {},
-    -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+    gopls = {
+        settings = {
+            gopls = {
+                analyses = {
+                    unusedparams = true,
+                    unreachable = true,
+                },
+                staticcheck = true,
+            },
+        },
+    },
+
+    html = {
+        filetypes = { "html", "css", "javascript", "typescript" },
+    },
 
     lua_ls = {
         Lua = {
@@ -555,9 +510,11 @@ require('neodev').setup()
 
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
-mason_lspconfig.setup {
+
+mason_lspconfig.setup({
     ensure_installed = vim.tbl_keys(servers),
-}
+    automatic_installation = true,
+})
 
 mason_lspconfig.setup_handlers {
     function(server_name)
@@ -578,9 +535,7 @@ vim.api.nvim_create_autocmd({"BufWritePre"}, {
   end,
 })
 
--- [[ Configure nvim-cmp ]]
--- See `:help cmp`
-local cmp = require 'cmp'
+local cmp = require('cmp')
 
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
@@ -666,7 +621,6 @@ vim.keymap.set("n", "<leader>gt", "<cmd>GoTestFile<cr>", { desc = '[space|gt] ex
 
 require("modules.go")
 require("modules.statusline")
--- require("modules.doom-one")
 require("modules.userfake")
 require("modules.nvim-tree")
 require("modules.dlv")
@@ -703,7 +657,7 @@ vim.api.nvim_create_user_command('CoverageClear', function() goc.ClearCoverage()
 vim.keymap.set('n', ']a', goc.Alternate, {silent=true})
 vim.keymap.set('n', '[a', goc.AlternateSplit, {silent=true})          -- set verticalSplit=true for vertical
 
-cf = function(testCurrentFunction)
+local cf = function(testCurrentFunction)
   local cb = function(path, index)
     if path then
 
@@ -726,50 +680,9 @@ end
 vim.keymap.set('n', '<leader>gca', cf, {silent=true})
 vim.keymap.set('n', '<Leader>gcb', function() cf(true) end, {silent=true})
 
--- default colors
--- vim.api.nvim_set_hl(0, 'GocNormal', {link='Comment'})
--- vim.api.nvim_set_hl(0, 'GocCovered', {link='String'})
--- vim.api.nvim_set_hl(0, 'GocUncovered', {link='Error'})
--- require("modules.settings")
-
--- vim.api.nvim_set_hl(0, 'ColorColumn', { bg = '#282c34', blend = 10 })
--- vim.api.nvim_set_hl(0, 'CursorLine', { bg = '#282c34', blend = 10 })  -- Altere a cor de fundo e o blend conforme preferir
-
--- The setup config table shows all available config options with their default values:
-require("neocord").setup({
-    -- General options
-    logo                = "auto",                     -- "auto" or url
-    logo_tooltip        = nil,                        -- nil or string
-    main_image          = "language",                 -- "language" or "logo"
-    client_id           = "1157438221865717891",      -- Use your own Discord application client id (not recommended)
-    log_level           = nil,                        -- Log messages at or above this level (one of the following: "debug", "info", "warn", "error")
-    debounce_timeout    = 10,                         -- Number of seconds to debounce events (or calls to `:lua package.loaded.presence:update(<filename>, true)`)
-    blacklist           = {},                         -- A list of strings or Lua patterns that disable Rich Presence if the current file name, path, or workspace matches
-    file_assets         = {},                         -- Custom file asset definitions keyed by file names and extensions (see default config at `lua/presence/file_assets.lua` for reference)
-    show_time           = true,                       -- Show the timer
-    global_timer        = false,                      -- if set true, timer won't update when any event are triggered
-
-    -- Rich Presence text options
-    editing_text        = "Editing %s",               -- Format string rendered when an editable file is loaded in the buffer (either string or function(filename: string): string)
-    file_explorer_text  = "Browsing %s",              -- Format string rendered when browsing a file explorer (either string or function(file_explorer_name: string): string)
-    git_commit_text     = "Committing changes",       -- Format string rendered when committing changes in git (either string or function(filename: string): string)
-    plugin_manager_text = "Managing plugins",         -- Format string rendered when managing plugins (either string or function(plugin_manager_name: string): string)
-    reading_text        = "Reading %s",               -- Format string rendered when a read-only or unmodifiable file is loaded in the buffer (either string or function(filename: string): string)
-    workspace_text      = "Working on %s",            -- Format string rendered when in a git repository (either string or function(project_name: string|nil, filename: string): string)
-    line_number_text    = "Line %s out of %s",        -- Format string rendered when `enable_line_number` is set to true (either string or function(line_number: number, line_count: number): string)
-    terminal_text       = "Using Terminal",           -- Format string rendered when in terminal mode.
-})
-
-
-require'lspconfig'.golangci_lint_ls.setup{
+require('lspconfig').golangci_lint_ls.setup({
   cmd = { "golangci-lint-langserver" },
-  filetypes = { "go" },
-  root_dir = require'lspconfig'.util.root_pattern(".golangci.yml", "go.mod", ".git"),
-  settings = {
-    golangci_lint = {
-      command = { "golangci-lint", "run", "--out-format", "json" },
-    },
-  },
-}
-
-vim.o.tabstop = 4      -- Cada caractere de tabulação será equivalente a 4 espaços
+  init_options = {
+    command = { "golangci-lint", "run", "--out-format", "json" }
+  }
+})

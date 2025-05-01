@@ -13,7 +13,7 @@ M.setup = function(opts)
   vim.api.nvim_set_hl(0, 'GocUncovered', {link='Error'})
 
   if opts then
-      verticalSplit = opts.verticalSplit or true
+      local verticalSplit = opts.verticalSplit or true
       assert(type(verticalSplit) == "boolean", "verticalSplit must be boolean or nil")
       M.splitCmd = verticalSplit and 'vsp ' or 'sp '
       M.splitSBCmd = verticalSplit and 'vert ' or 'to '
